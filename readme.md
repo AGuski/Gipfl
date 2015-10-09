@@ -1,0 +1,1 @@
+Mit Android Studio "Checkout Project from Version Control" Klonen. Dann läuft das.
