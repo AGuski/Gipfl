@@ -6,8 +6,13 @@ import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
+import android.widget.AdapterView;
+import android.widget.ListView;
 
-public class TripListActivity extends AppCompatActivity {
+public class TripListActivity extends AppCompatActivity implements View.OnClickListener, AdapterView.OnItemClickListener  {
+
+    ListView mainListView;
+    TripAdapter tripAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -25,6 +30,27 @@ public class TripListActivity extends AppCompatActivity {
             }
         });
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+
+        // 4. Access the ListView
+        mainListView = (ListView) findViewById(R.id.trip_listview);
+
+        // 5. Set this activity to react to list items being pressed
+        mainListView.setOnItemClickListener(this);
+
+        // 10. Create a JSONAdapter for the ListView
+        tripAdapter = new TripAdapter(this, getLayoutInflater());
+
+        // Set the ListView to use the ArrayAdapter
+        mainListView.setAdapter(tripAdapter);
     }
 
+    @Override
+    public void onClick(View v) {
+
+    }
+
+    @Override
+    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+
+    }
 }

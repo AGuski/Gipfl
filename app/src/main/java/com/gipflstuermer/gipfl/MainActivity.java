@@ -42,7 +42,7 @@ public class MainActivity extends AppCompatActivity {
         // Set SharedPrefs for development!
         SharedPreferences.Editor editor = sharedPreferences.edit();
         editor.putString(PREF_USER, "Peter"); // Logged in as Peter.
-        editor.putBoolean(PREF_ONTRIP, true); // is on trip.
+        editor.putBoolean(PREF_ONTRIP, false); // is on trip.
         //editor.clear(); // <-- Clears the SharedPrefs - For Development!
         editor.commit();
 
