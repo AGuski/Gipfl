@@ -1,4 +1,4 @@
-package com.gipflstuermer.gipfl;
+package com.gipflstuermer.gipfl.tools;
 
 import android.hardware.Sensor;
 import android.hardware.SensorEvent;
