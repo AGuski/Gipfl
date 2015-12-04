@@ -1,5 +1,6 @@
 package com.gipflstuermer.gipfl;
 
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
@@ -31,6 +32,12 @@ public class MainActivity extends AppCompatActivity {
                         .setAction("Action", null).show();
             }
         });
+
+//        Intent LoginIntent = new Intent(this, LoginActivity.class);
+//        startActivity(LoginIntent);
+
+        Intent TripIntent = new Intent(this, TripActivity.class);
+        startActivity(TripIntent);
     }
 
     @Override
