@@ -29,6 +29,10 @@ public class TripActivity extends AppCompatActivity {
                         .setAction("Action", null).show();
             }
         });
+
+        Barometer barometer = new Barometer();
+        String pressure = Float.toString(barometer.getPressure());
+        baro_text.setText(pressure);
     }
 
 }
