@@ -7,6 +7,8 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.TextView;
 
+import org.json.JSONArray;
+
 import java.util.ArrayList;
 
 /**
@@ -76,6 +78,12 @@ public class TripAdapter extends BaseAdapter{
         // If there is an image add that too.
 
         return convertView;
+    }
+
+    public void updateData(ArrayList<Trip> tripList) {
+        // update the adapter's dataset
+        this.tripList = tripList;
+        notifyDataSetChanged();
     }
 
     // this is used so you only ever have to do

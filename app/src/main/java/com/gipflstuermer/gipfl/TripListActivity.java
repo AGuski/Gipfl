@@ -9,6 +9,9 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
 
+import java.lang.reflect.Array;
+import java.util.ArrayList;
+
 public class TripListActivity extends AppCompatActivity implements View.OnClickListener, AdapterView.OnItemClickListener  {
 
     ListView mainListView;
@@ -42,6 +45,16 @@ public class TripListActivity extends AppCompatActivity implements View.OnClickL
 
         // Set the ListView to use the ArrayAdapter
         mainListView.setAdapter(tripAdapter);
+
+        //Test Trips & Liste
+        Trip trip1 = new Trip("Kaffee-Fahrt","Peter");
+        Trip trip2 = new Trip("Balkan-Route","Angela");
+
+        ArrayList<Trip> tripList = new ArrayList<>();
+        tripList.add(trip1);
+        tripList.add(trip2);
+        tripAdapter.updateData(tripList);
+
     }
 
     @Override
