@@ -3,6 +3,7 @@ package com.gipflstuermer.gipfl;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
@@ -30,6 +31,15 @@ public class TripActivity extends AppCompatActivity {
             }
         });
 
+        // If User is already logged in, greet him with Alert.
+        if (this.getIntent().hasExtra("User")) {
+            String name = (String) this.getIntent().getExtras().get("User");
+            AlertDialog.Builder alert = new AlertDialog.Builder(this);
+            alert.setMessage("Welcome back to your trip, " + name);
+            alert.show();
+        }
+
+        // Barometer
         Barometer barometer = new Barometer();
         String pressure = Float.toString(barometer.getPressure());
         baro_text.setText(pressure);
