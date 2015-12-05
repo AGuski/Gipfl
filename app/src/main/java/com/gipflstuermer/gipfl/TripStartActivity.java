@@ -1,5 +1,6 @@
 package com.gipflstuermer.gipfl;
 
+import android.content.Intent;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
@@ -82,7 +83,7 @@ public class TripStartActivity extends AppCompatActivity {
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.menu_trip_start, menu);
+        getMenuInflater().inflate(R.menu.menu_main, menu);
         return true;
     }
 
@@ -96,6 +97,14 @@ public class TripStartActivity extends AppCompatActivity {
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_settings) {
             return true;
+        }
+        if (id == R.id.action_trip_list) {
+            Intent tripListIntent = new Intent(this, TripListActivity.class);
+            startActivity(tripListIntent);
+        }
+        if (id == R.id.action_active_trip) {
+            Intent tripIntent = new Intent(this, TripActivity.class);
+            startActivity(tripIntent);
         }
 
         return super.onOptionsItemSelected(item);

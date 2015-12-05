@@ -7,7 +7,6 @@ import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -58,7 +57,6 @@ public class MainActivity extends AppCompatActivity {
             startActivity(tripIntent);
         } else {
             Intent tripListIntent = new Intent(this, TripListActivity.class);
-
             startActivity(tripListIntent);
         }
     }
@@ -80,6 +78,14 @@ public class MainActivity extends AppCompatActivity {
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_settings) {
             return true;
+        }
+        if (id == R.id.action_trip_list) {
+            Intent tripListIntent = new Intent(this, TripListActivity.class);
+            startActivity(tripListIntent);
+        }
+        if (id == R.id.action_active_trip) {
+            Intent tripIntent = new Intent(this, TripActivity.class);
+            startActivity(tripIntent);
         }
 
         return super.onOptionsItemSelected(item);
