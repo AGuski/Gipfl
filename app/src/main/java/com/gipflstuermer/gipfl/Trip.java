@@ -1,16 +1,20 @@
 package com.gipflstuermer.gipfl;
 
 import android.media.Image;
+import android.os.Parcel;
+import android.os.Parcelable;
+
+import java.io.Serializable;
 
 /**
  * Created by alex on 04.12.15.
  */
-public class Trip {
+public class Trip implements Serializable {
 
     private String title;
     private String description;
     private String author;
-    private Image image;
+    private String imageURL;
     // public PointOfInterest[] pois;
     // public Route;
     // public area;
@@ -20,7 +24,7 @@ public class Trip {
         this.title = title;
         this.author = author;
         this.description = "No description.";
-        this.image = null;
+        this.imageURL = null;
     }
 
     // Getter & Setter
@@ -29,28 +33,27 @@ public class Trip {
     }
 
     public String getDescription() {
-        return description;
+        return this.description;
     }
 
     public String getAuthor() {
-        return author;
+        return this.author;
     }
 
-    public Image getImage() {
-        return image;
+    public String getImageURL() {
+        return this.imageURL;
     }
 
     public void changeName(String name){
         this.title = name;
     }
 
-    public void addImage(Image image){
-        this.image = image;
+    public void addImageURL(String imageURL){
+        this.imageURL = this.imageURL;
     }
 
     public void addDescription(String description){
         this.description = description;
     }
-
 
 }

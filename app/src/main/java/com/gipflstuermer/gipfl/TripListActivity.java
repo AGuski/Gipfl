@@ -2,6 +2,7 @@ package com.gipflstuermer.gipfl;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Parcel;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
@@ -20,6 +21,8 @@ import java.util.ArrayList;
 
 public class TripListActivity extends AppCompatActivity implements AdapterView.OnItemClickListener  {
 
+
+    private final static String TRIP_KEY = "com.giflstuermer.gipfl.trip_key";
     ListView mainListView;
     TripAdapter tripAdapter;
 
@@ -66,8 +69,11 @@ public class TripListActivity extends AppCompatActivity implements AdapterView.O
     // OnClick Listener for the list
     @Override
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-        // Go to TripStart Screen
+        // 1. serialize selected Trip to send to next Activity
+        Trip selectedTrip = (Trip) tripAdapter.getItem(position);
+        // 2. Go to TripStart Screen
         Intent tripStartIntent = new Intent(this, TripStartActivity.class);
+        tripStartIntent.putExtra(TRIP_KEY,selectedTrip);
         startActivity(tripStartIntent);
     }
 }

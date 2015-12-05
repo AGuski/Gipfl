@@ -10,6 +10,7 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -34,6 +35,9 @@ public class TripStartActivity extends AppCompatActivity {
      * The {@link ViewPager} that will host the section contents.
      */
     private ViewPager mViewPager;
+
+    private final static String TRIP_KEY = "com.giflstuermer.gipfl.trip_key";
+    private Trip mTrip;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -60,6 +64,17 @@ public class TripStartActivity extends AppCompatActivity {
                         .setAction("Action", null).show();
             }
         });
+
+        // Check if started with an existing Trip, if not, create new Trip:
+        if(getIntent().hasExtra(TRIP_KEY)){
+            mTrip = (Trip)getIntent().getSerializableExtra(TRIP_KEY);
+            Log.d("Trip", "Trip Deserialized!");
+            Log.d("Trip", mTrip.getTitle());
+        } else {
+            // Code for new Trip Here
+            Log.d("Trip", "Empty Trip");
+        }
+
 
     }
 
@@ -154,6 +169,7 @@ public class TripStartActivity extends AppCompatActivity {
                                  Bundle savedInstanceState) {
             View rootView = inflater.inflate(R.layout.fragment_trip_start, container, false);
             TextView textView = (TextView) rootView.findViewById(R.id.section_label);
+
             textView.setText(getString(R.string.section_format, getArguments().getInt(ARG_SECTION_NUMBER)));
             return rootView;
         }

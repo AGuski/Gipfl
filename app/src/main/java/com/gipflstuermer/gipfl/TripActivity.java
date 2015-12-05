@@ -6,12 +6,16 @@ import android.support.design.widget.Snackbar;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
 
 import com.gipflstuermer.gipfl.tools.Barometer;
 
 public class TripActivity extends AppCompatActivity {
+
+    private final static String TRIP_KEY = "com.giflstuermer.gipfl.trip_key";
+    Trip mTrip;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -33,6 +37,15 @@ public class TripActivity extends AppCompatActivity {
             }
         });
 
+        // Check if started with an existing Trip, if not: ERROR!
+        if(getIntent().hasExtra(TRIP_KEY)){
+            mTrip = (Trip)getIntent().getSerializableExtra(TRIP_KEY);
+            Log.d("Trip", "Trip Deserialized!");
+            Log.d("Trip", mTrip.getTitle());
+        } else {
+            Log.d("Trip", "Empty Trip");
+        }
+
         // If User is already logged in, greet him with Alert.
         if (this.getIntent().hasExtra("User")) {
             String name = (String) this.getIntent().getExtras().get("User");
@@ -41,7 +54,7 @@ public class TripActivity extends AppCompatActivity {
             alert.show();
         }
 
-        // Barometer
+        // Add Barometer
         Barometer barometer = new Barometer();
         String pressure = Float.toString(barometer.getPressure());
         baro_text.setText(pressure);
