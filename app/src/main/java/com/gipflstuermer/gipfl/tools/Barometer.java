@@ -6,10 +6,12 @@ import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
 import android.widget.TextView;
 
+import java.util.Observable;
+
 /**
  * Created by Vincent on 04.12.2015.
  */
-public class Barometer implements SensorEventListener {
+public class Barometer extends Observable implements SensorEventListener  {
 
     private SensorManager mSensorManager;
     private Sensor mSensorTemperature;
@@ -37,6 +39,8 @@ public class Barometer implements SensorEventListener {
 
         if(event.sensor == mSensorPressure) {
             this.pressure = event.values[0];
+            setChanged();
+            notifyObservers();
         }
 
         if(event.sensor == mSensorHumidity) {

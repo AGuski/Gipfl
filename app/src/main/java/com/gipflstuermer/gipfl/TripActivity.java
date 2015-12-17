@@ -15,10 +15,15 @@ import android.widget.TextView;
 
 import com.gipflstuermer.gipfl.tools.Barometer;
 
-public class TripActivity extends AppCompatActivity {
+import java.util.Observable;
+import java.util.Observer;
+
+public class TripActivity extends AppCompatActivity implements Observer{
 
     private final static String TRIP_KEY = "com.giflstuermer.gipfl.trip_key";
     Trip mTrip;
+    private TextView baro_text;
+    private Barometer barometer = new Barometer();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -28,8 +33,8 @@ public class TripActivity extends AppCompatActivity {
         setSupportActionBar(toolbar);
 
         // Access Textviews from XML
-        TextView baro_text = (TextView) findViewById(R.id.baro_text);
-        baro_text.setText("Wurst");
+        baro_text = (TextView) findViewById(R.id.baro_text);
+        //baro_text.setText("Wurst");
 
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
@@ -58,9 +63,7 @@ public class TripActivity extends AppCompatActivity {
         }
 
         // Add Barometer
-        Barometer barometer = new Barometer();
-        String pressure = Float.toString(barometer.getPressure());
-        baro_text.setText(pressure);
+        barometer.addObserver(this);
     }
 
     @Override
@@ -87,6 +90,12 @@ public class TripActivity extends AppCompatActivity {
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    public void update(Observable o, Object arg) {
+        String pressure = Float.toString(barometer.getPressure());
+        baro_text.setText(pressure);
     }
 
 }
