@@ -3,6 +3,7 @@
   <component name="ProjectModuleManager">
     <modules>
       <module fileurl="file://$PROJECT_DIR$/Gipfl.iml" filepath="$PROJECT_DIR$/Gipfl.iml" />
+      <module fileurl="file://$PROJECT_DIR$/SE2_Gipfl.iml" filepath="$PROJECT_DIR$/SE2_Gipfl.iml" />
       <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
     </modules>
   </component>
