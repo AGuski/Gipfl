@@ -1,9 +1,14 @@
 package com.gipflstuermer.gipfl;
 
+import android.Manifest;
+import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.location.LocationManager;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
@@ -14,11 +19,13 @@ import android.view.View;
 import android.widget.TextView;
 
 import com.gipflstuermer.gipfl.tools.Barometer;
+import com.gipflstuermer.gipfl.tools.GPSSensor;
 
 public class TripActivity extends AppCompatActivity {
 
     private final static String TRIP_KEY = "com.giflstuermer.gipfl.trip_key";
     Trip mTrip;
+    String myAltitude;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -58,9 +65,23 @@ public class TripActivity extends AppCompatActivity {
         }
 
         // Add Barometer
-        Barometer barometer = new Barometer();
-        String pressure = Float.toString(barometer.getPressure());
-        baro_text.setText(pressure);
+
+
+        if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION)
+                != PackageManager.PERMISSION_GRANTED) {
+            myAltitude = "no information";
+        } else {
+            LocationManager locationManager = (LocationManager)getSystemService(Context.LOCATION_SERVICE);
+            GPSSensor gpsListener = new GPSSensor();
+            locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, gpsListener);
+            locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 0, 0, gpsListener);
+
+            myAltitude = "altitude";
+        }
+
+        //Barometer barometer = new Barometer();
+        //String pressure = Float.toString(barometer.getPressure());
+        baro_text.setText(myAltitude);
     }
 
     @Override
