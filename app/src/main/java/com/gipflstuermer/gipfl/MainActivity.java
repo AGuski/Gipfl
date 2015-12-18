@@ -13,7 +13,7 @@ import android.view.MenuItem;
 
 public class MainActivity extends AppCompatActivity {
 
-    // Pesistent storage
+    // Pesistent storage +-+
     private static final String PREFS = "prefs";
     private static final String PREF_USER =  "User";
     private static final String PREF_ONTRIP = "OnTrip";
