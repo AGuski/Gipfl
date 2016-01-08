@@ -11,12 +11,17 @@ import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
 
+import java.util.ArrayList;
+
 public class MainActivity extends AppCompatActivity {
+
+    /*public ArrayList<User> users; //<-- For now, all registered Users
+    public User currentUser;*/
 
     // Pesistent storage +-+
     private static final String PREFS = "prefs";
-    private static final String PREF_USER =  "User";
-    private static final String PREF_ONTRIP = "OnTrip";
+    private static final String PREF_USER =  "User"; // <-- The Logged in User as String
+    private static final String PREF_ONTRIP = "OnTrip"; // <-- boolean, if the user is on trip
     SharedPreferences sharedPreferences;
 
     @Override
@@ -38,9 +43,25 @@ public class MainActivity extends AppCompatActivity {
         // Get Shared Prefs:
         sharedPreferences = getApplicationContext().getSharedPreferences(PREFS, MODE_PRIVATE);
 
+        // Creating User and Trips for Development
+//        User peter = new User("Peter","1234");
+//        peter.addTrip(new Trip("Kaffee-Fahrt","Peter"));
+//        peter.addTrip(new Trip("Balkan-Route","Angela"));
+//        users.add(peter);
+
         // Set SharedPrefs for development!
         SharedPreferences.Editor editor = sharedPreferences.edit();
         editor.putString(PREF_USER, "Peter"); // Logged in as Peter.
+
+        // set Current User
+        /*for (User u : users){
+            if(u.getName().equals(sharedPreferences.getString(PREF_USER, ""))){
+                currentUser = u;
+            } else {
+                currentUser = peter;
+            }
+        }*/
+
         editor.putBoolean(PREF_ONTRIP, true); // is on trip. Switch for Trip/TripList
         //editor.clear(); // <-- Clears the SharedPrefs - For Development!
         editor.commit();
@@ -90,4 +111,5 @@ public class MainActivity extends AppCompatActivity {
 
         return super.onOptionsItemSelected(item);
     }
+
 }

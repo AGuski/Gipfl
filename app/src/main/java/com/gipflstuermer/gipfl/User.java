@@ -27,12 +27,20 @@ public class User {
         return this.trips;
     }
 
+    public String getName(){
+        return this.name;
+    }
+
     public Trip getActiveTrip(){
         return this.activeTrip;
     }
 
-    void setActiveTrip(Trip trip){
+    public void setActiveTrip(Trip trip){
         this.activeTrip = trip;
+    }
+
+    public void addTrip(Trip trip){
+        this.getTrips().add(trip);
     }
 
 }

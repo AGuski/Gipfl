@@ -61,6 +61,8 @@ public class TripListActivity extends AppCompatActivity implements AdapterView.O
         Trip trip1 = new Trip("Kaffee-Fahrt","Peter");
         Trip trip2 = new Trip("Balkan-Route","Angela");
 
+        //ArrayList<Trip> list = MainActivity.getCurrentUser().getTrips();
+
         ArrayList<Trip> tripList = new ArrayList<>();
         tripList.add(trip1);
         tripList.add(trip2);
