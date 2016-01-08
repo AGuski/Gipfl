@@ -45,14 +45,17 @@ public class MainActivity extends AppCompatActivity {
         SharedPreferences.Editor editor = sharedPreferences.edit();
         editor.putString(PREF_USER, "Peter"); // Logged in as Peter.
 
+
         ((MyGipfl) this.getApplication()).createContent(); //<-- Creating content in Dev.
 
         // set Current User
-        ((MyGipfl) this.getApplication()).setCurrentUser(sharedPreferences.getString(PREF_USER, ""));
 
-        editor.putBoolean(PREF_ONTRIP, true); // is on trip. Switch for Trip/TripList
+
+        editor.putBoolean(PREF_ONTRIP, false); // is on trip. Switch for Trip/TripList
         //editor.clear(); // <-- Clears the SharedPrefs - For Development!
         editor.commit();
+
+        ((MyGipfl) this.getApplication()).setCurrentUser(sharedPreferences.getString(PREF_USER, ""));
 
         // Check for Login Session
         if(sharedPreferences.getString(PREF_USER, null) == null) {
@@ -60,11 +63,12 @@ public class MainActivity extends AppCompatActivity {
             Intent loginIntent = new Intent(this, LoginActivity.class);
             startActivity(loginIntent);
         } else if(sharedPreferences.getBoolean(PREF_ONTRIP, false)){
-            // Show Trip Screen
+            // If ONTRIP = true -> Show Trip Screen
             Intent tripIntent = new Intent(this, TripActivity.class);
             tripIntent.putExtra("User",sharedPreferences.getString(PREF_USER, ""));
             startActivity(tripIntent);
         } else {
+            // Show Trip List
             Intent tripListIntent = new Intent(this, TripListActivity.class);
             startActivity(tripListIntent);
         }

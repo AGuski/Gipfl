@@ -1,10 +1,12 @@
 package com.gipflstuermer.gipfl;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.Parcel;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
@@ -23,6 +25,9 @@ import java.util.ArrayList;
 
 public class TripListActivity extends AppCompatActivity implements AdapterView.OnItemClickListener  {
 
+    SharedPreferences sharedPreferences;
+    private static final String PREFS = "prefs";
+    private static final String PREF_ONTRIP = "OnTrip";
 
     private final static String TRIP_KEY = "com.giflstuermer.gipfl.trip_key";
     ListView mainListView;
@@ -35,6 +40,8 @@ public class TripListActivity extends AppCompatActivity implements AdapterView.O
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
+
+
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -44,6 +51,8 @@ public class TripListActivity extends AppCompatActivity implements AdapterView.O
             }
         });
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+
+        sharedPreferences = getApplicationContext().getSharedPreferences(PREFS, MODE_PRIVATE);
 
         // 1. Access the ListView
         mainListView = (ListView) findViewById(R.id.trip_listview);
@@ -94,9 +103,16 @@ public class TripListActivity extends AppCompatActivity implements AdapterView.O
         if (id == R.id.action_settings) {
             return true;
         }
+
         if (id == R.id.action_active_trip) {
-            Intent tripIntent = new Intent(this, TripActivity.class);
-            startActivity(tripIntent);
+            if (sharedPreferences.getBoolean(PREF_ONTRIP, false)) {
+                Intent tripIntent = new Intent(this, TripActivity.class);
+                startActivity(tripIntent);
+            } else {
+                AlertDialog.Builder alert = new AlertDialog.Builder(this);
+                alert.setMessage("No Active Trip!");
+                alert.show();
+            }
         }
 
         return super.onOptionsItemSelected(item);

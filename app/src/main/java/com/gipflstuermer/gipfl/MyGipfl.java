@@ -15,13 +15,7 @@ public class MyGipfl extends Application {
     private ArrayList<User> users = new ArrayList<User>(); //<-- For now, all registered Users
     private User currentUser = null;
 
-    public MyGipfl(){
-
-        Log.d("MyGipfl", "TestBlah!!!!!");
-
-    }
-
-    public ArrayList<User> getUsers(){
+    public ArrayList<User> getUserList(){
         return users;
     }
 
@@ -32,6 +26,12 @@ public class MyGipfl extends Application {
     public void setCurrentUser(User currentUser){
         this.currentUser = currentUser;
     }
+
+    /**
+     * A Method to set the current user from the PREFS_USER variable.
+     *
+     * @param name should be given by PREFS_USER
+     */
 
     public void setCurrentUser(String name){
         for (User u : users){

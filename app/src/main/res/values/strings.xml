@@ -20,6 +20,8 @@
     <string name="name_activity_trip_list">TripListActivity</string>
     <string name="name_activity_trip_start">TripStartActivity</string>
     <string name="section_format">Hello World from section: %1$d</string>
+    <string name="by_author">By: %1$s</string>
+    <string name="start_trip_button">Start this trip!</string>
     <string name="name_activity_maps">Map</string>
     <string name="name_activity_trip">TripActivity</string>
     <string name="name_activity_poi">PoiActivity</string>
