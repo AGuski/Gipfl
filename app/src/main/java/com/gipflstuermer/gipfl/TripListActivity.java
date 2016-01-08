@@ -57,15 +57,10 @@ public class TripListActivity extends AppCompatActivity implements AdapterView.O
         // 4. Set the ListView to use the ArrayAdapter
         mainListView.setAdapter(tripAdapter);
 
-        //Test Trips & Liste
-        Trip trip1 = new Trip("Kaffee-Fahrt","Peter");
-        Trip trip2 = new Trip("Balkan-Route","Angela");
+        // 5. get Trip list from currentUser <-- must not be null!
+        ArrayList<Trip> tripList = ((MyGipfl) this.getApplication()).getCurrentUser().getTrips();
 
-        //ArrayList<Trip> list = MainActivity.getCurrentUser().getTrips();
-
-        ArrayList<Trip> tripList = new ArrayList<>();
-        tripList.add(trip1);
-        tripList.add(trip2);
+        // 6. Update the TripAdapter
         tripAdapter.updateData(tripList);
 
     }
