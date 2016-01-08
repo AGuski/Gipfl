@@ -1,5 +1,7 @@
 package com.gipflstuermer.gipfl;
 
+import android.content.Intent;
+import android.content.SharedPreferences;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
@@ -10,13 +12,17 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 
+import android.widget.Button;
 import android.widget.TextView;
+
+import java.util.ArrayList;
 
 public class PoiActivity extends AppCompatActivity {
 
@@ -92,68 +98,76 @@ public class PoiActivity extends AppCompatActivity {
      */
     public class SectionsPagerAdapter extends FragmentPagerAdapter {
 
+        private ArrayList<PointOfInterest> poiList;
+
         public SectionsPagerAdapter(FragmentManager fm) {
             super(fm);
+            poiList = ((MyGipfl) getApplication()).getAllPointsOfInterest();
         }
 
         @Override
         public Fragment getItem(int position) {
             // getItem is called to instantiate the fragment for the given page.
             // Return a PlaceholderFragment (defined as a static inner class below).
-            return PlaceholderFragment.newInstance(position + 1);
+
+            return PoiFragment.newInstance(poiList.get(position));
         }
 
         @Override
         public int getCount() {
-            // Show 3 total pages.
-            return 3;
+            return poiList.size();
         }
 
-        @Override
-        public CharSequence getPageTitle(int position) {
-            switch (position) {
-                case 0:
-                    return "SECTION 1";
-                case 1:
-                    return "SECTION 2";
-                case 2:
-                    return "SECTION 3";
-            }
-            return null;
-        }
     }
 
     /**
-     * A placeholder fragment containing a simple view.
+     * The Fragments which contain the Trip start Info
      */
-    public static class PlaceholderFragment extends Fragment {
-        /**
-         * The fragment argument representing the section number for this
-         * fragment.
-         */
-        private static final String ARG_SECTION_NUMBER = "section_number";
+
+    public static class PoiFragment extends Fragment {
+
+        private static final String PREFS = "prefs";
+        private static final String PREF_ONTRIP = "OnTrip"; // <-- boolean, if the user is on trip
+        SharedPreferences sharedPreferences;
+
+        private static final String ARG_POI = "poi_fragment";
+        private PointOfInterest mPoi;
 
         /**
          * Returns a new instance of this fragment for the given section
          * number.
          */
-        public static PlaceholderFragment newInstance(int sectionNumber) {
-            PlaceholderFragment fragment = new PlaceholderFragment();
+        public static PoiFragment newInstance(PointOfInterest poi) {
+            PoiFragment fragment = new PoiFragment();
             Bundle args = new Bundle();
-            args.putInt(ARG_SECTION_NUMBER, sectionNumber);
+
+            args.putSerializable(ARG_POI, poi);
             fragment.setArguments(args);
             return fragment;
         }
 
-        public PlaceholderFragment() {
+        public PoiFragment() {
         }
 
         @Override
         public View onCreateView(LayoutInflater inflater, ViewGroup container,
                                  Bundle savedInstanceState) {
             View rootView = inflater.inflate(R.layout.fragment_poi, container, false);
-            TextView textView = (TextView) rootView.findViewById(R.id.trip_title);
-            textView.setText(getString(R.string.section_format, getArguments().getInt(ARG_SECTION_NUMBER)));
+
+            sharedPreferences = getActivity().getApplicationContext().getSharedPreferences(PREFS, MODE_PRIVATE);
+
+            // <----- VIEW CONTENT FOR POINTS OF INTEREST HERE ------>
+
+            TextView poiName = (TextView) rootView.findViewById(R.id.poi_name);
+
+            // Get The poi as object
+            mPoi = (PointOfInterest) getArguments().getSerializable(ARG_POI);
+
+            // Set the Textfields
+            poiName.setText(mPoi.getName());
+
+            // <------ VIEW CONTENT END ------>
+
             return rootView;
         }
     }

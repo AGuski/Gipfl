@@ -49,13 +49,12 @@ public class MainActivity extends AppCompatActivity {
         ((MyGipfl) this.getApplication()).createContent(); //<-- Creating content in Dev.
 
         // set Current User
-
+        ((MyGipfl) this.getApplication()).setCurrentUser(sharedPreferences.getString(PREF_USER, ""));
 
         editor.putBoolean(PREF_ONTRIP, false); // is on trip. Switch for Trip/TripList
         //editor.clear(); // <-- Clears the SharedPrefs - For Development!
         editor.commit();
 
-        ((MyGipfl) this.getApplication()).setCurrentUser(sharedPreferences.getString(PREF_USER, ""));
 
         // Check for Login Session
         if(sharedPreferences.getString(PREF_USER, null) == null) {

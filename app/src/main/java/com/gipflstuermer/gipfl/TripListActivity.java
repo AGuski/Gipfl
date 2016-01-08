@@ -115,6 +115,11 @@ public class TripListActivity extends AppCompatActivity implements AdapterView.O
             }
         }
 
+        if (id == R.id.action_all_pois) {
+            Intent allPoisIntent = new Intent(this, PoiActivity.class);
+            startActivity(allPoisIntent);
+        }
+
         return super.onOptionsItemSelected(item);
     }
 }

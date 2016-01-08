@@ -34,7 +34,22 @@ public class TripActivity extends AppCompatActivity {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
+        // Check if started with an existing Trip, if not: ERROR!
+        if(getIntent().hasExtra(TRIP_KEY)){
+            mTrip = (Trip)getIntent().getSerializableExtra(TRIP_KEY);
+            Log.d("Trip", "Trip Deserialized!");
+            Log.d("Trip", mTrip.getTitle());
+        } else {
+            Log.d("Trip", "Empty Trip");
+        }
+
+        // get currentTrip from Global Variable
+        mTrip = ((MyGipfl) getApplication()).getCurrentUser().getActiveTrip();
+
         // Access Textviews from XML
+        TextView tripTitle = (TextView) findViewById(R.id.trip_title);
+        tripTitle.setText(mTrip.getTitle());
+
         TextView baro_text = (TextView) findViewById(R.id.baro_text);
         baro_text.setText("Wurst");
 
@@ -46,15 +61,6 @@ public class TripActivity extends AppCompatActivity {
                         .setAction("Action", null).show();
             }
         });
-
-        // Check if started with an existing Trip, if not: ERROR!
-        if(getIntent().hasExtra(TRIP_KEY)){
-            mTrip = (Trip)getIntent().getSerializableExtra(TRIP_KEY);
-            Log.d("Trip", "Trip Deserialized!");
-            Log.d("Trip", mTrip.getTitle());
-        } else {
-            Log.d("Trip", "Empty Trip");
-        }
 
         // If User is already logged in, greet him with Alert.
         if (this.getIntent().hasExtra("User")) {
@@ -105,6 +111,10 @@ public class TripActivity extends AppCompatActivity {
         if (id == R.id.action_trip_list) {
             Intent tripListIntent = new Intent(this, TripListActivity.class);
             startActivity(tripListIntent);
+        }
+        if (id == R.id.action_all_pois) {
+            Intent allPoisIntent = new Intent(this, PoiActivity.class);
+            startActivity(allPoisIntent);
         }
 
         return super.onOptionsItemSelected(item);

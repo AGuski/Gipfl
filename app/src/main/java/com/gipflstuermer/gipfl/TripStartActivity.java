@@ -186,6 +186,8 @@ public class TripStartActivity extends AppCompatActivity {
 
             sharedPreferences = getActivity().getApplicationContext().getSharedPreferences(PREFS, MODE_PRIVATE);
 
+            // <----- VIEW CONTENT FOR START TRIP HERE ------>
+
             TextView tripTitle = (TextView) rootView.findViewById(R.id.trip_title);
             TextView tripAuthor = (TextView) rootView.findViewById(R.id.trip_author);
             TextView tripDesc = (TextView) rootView.findViewById(R.id.trip_description);
@@ -216,6 +218,8 @@ public class TripStartActivity extends AppCompatActivity {
                     startActivity(tripIntent);
                 }
             });
+
+            // <------ VIEW CONTENT END ------>
 
             return rootView;
         }

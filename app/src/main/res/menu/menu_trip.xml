@@ -5,5 +5,7 @@
         android:orderInCategory="100" app:showAsAction="never" />
     <item android:id="@+id/action_trip_list" android:title="@string/action_trip_list"
         android:orderInCategory="100" app:showAsAction="never" />
+    <item android:id="@+id/action_all_pois" android:title="@string/action_all_pois"
+        android:orderInCategory="100" app:showAsAction="never" />
 
 </menu>

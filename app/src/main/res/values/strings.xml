@@ -3,6 +3,7 @@
     <string name="action_settings">Settings</string>
     <string name="action_trip_list">My Trip List</string>
     <string name="action_active_trip">My Active Trip</string>
+    <string name="action_all_pois">All Points of Interest</string>
     <string name="name_activity_login">Sign in</string>
 
     <!-- Strings related to login -->

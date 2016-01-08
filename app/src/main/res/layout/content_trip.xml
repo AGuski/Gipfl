@@ -10,6 +10,15 @@
     tools:showIn="@layout/activity_trip" tools:context="com.gipflstuermer.gipfl.TripActivity">
 
     <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:text="Trip Title here"
+        android:id="@+id/trip_title"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true" />
+
+    <TextView
         android:id="@+id/baro_text"
         android:text="Barometer ausgabe hier"
         android:layout_centerHorizontal="true"
@@ -18,5 +27,7 @@
         android:layout_centerVertical="true"
 
         />
+
+
 
 </RelativeLayout>

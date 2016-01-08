@@ -14,6 +14,7 @@ public class MyGipfl extends Application {
 
     private ArrayList<User> users = new ArrayList<User>(); //<-- For now, all registered Users
     private User currentUser = null;
+    private ArrayList<PointOfInterest> poiList = new ArrayList<PointOfInterest>();
 
     public ArrayList<User> getUserList(){
         return users;
@@ -21,6 +22,10 @@ public class MyGipfl extends Application {
 
     public User getCurrentUser(){
         return currentUser;
+    }
+
+    public ArrayList<PointOfInterest> getAllPointsOfInterest(){
+        return poiList;
     }
 
     public void setCurrentUser(User currentUser){
@@ -50,8 +55,13 @@ public class MyGipfl extends Application {
         peter.addTrip(new Trip("Kaffee-Fahrt","Peter"));
         peter.addTrip(new Trip("Balkan-Route","Angela"));
         peter.addTrip(new Trip("Wurst-Wanderung","Peter"));
-        peter.addTrip(new Trip("Walkabout","Eso-Franz"));
+        peter.addTrip(new Trip("Walkabout", "Eso-Franz"));
         users.add(peter);
+
+        //Points of Interest zum Testen
+        poiList.add(new PointOfInterest("Altes Schloss"));
+        poiList.add(new PointOfInterest("Wursthaus"));
+        poiList.add(new PointOfInterest("Erdloch"));
 
         Log.d("DevContent: ",peter.getName());
 
