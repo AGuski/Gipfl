@@ -7,6 +7,7 @@ import java.util.ArrayList;
  */
 public class User {
 
+    private int id;
     private String name;
     private String password;
     private ArrayList<Trip> trips;
@@ -29,6 +30,15 @@ public class User {
 
     public String getName(){
         return this.name;
+    }
+
+    public String getPassword(){
+        return this.password;
+    }
+
+    // Should only be set by the Database!
+    public void setId(int id){
+        this.id = id;
     }
 
     public Trip getActiveTrip(){

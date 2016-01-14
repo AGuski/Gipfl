@@ -12,6 +12,7 @@ import java.util.ArrayList;
  */
 public class Trip implements Serializable {
 
+    private int id;
     private String title;
     private String description;
     private String author;
@@ -39,6 +40,11 @@ public class Trip implements Serializable {
 
     public String getAuthor() {
         return this.author;
+    }
+
+    // Should only be set by the Database!
+    public void setId(int id){
+        this.id = id;
     }
 
     public String getImageURL() {

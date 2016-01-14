@@ -12,6 +12,8 @@ import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
 
+import com.gipflstuermer.gipfl.database.GipflDbHelper;
+
 import java.util.ArrayList;
 
 public class MainActivity extends AppCompatActivity {
@@ -49,7 +51,8 @@ public class MainActivity extends AppCompatActivity {
         ((MyGipfl) this.getApplication()).createContent(); //<-- Creating content in Dev.
 
         // set Current User
-        ((MyGipfl) this.getApplication()).setCurrentUser(sharedPreferences.getString(PREF_USER, ""));
+        //((MyGipfl) this.getApplication()).setCurrentUser(sharedPreferences.getString(PREF_USER, ""));
+        ((MyGipfl) this.getApplication()).setCurrentUser("Peter");
 
         editor.putBoolean(PREF_ONTRIP, false); // is on trip. Switch for Trip/TripList
         //editor.clear(); // <-- Clears the SharedPrefs - For Development!

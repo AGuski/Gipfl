@@ -14,6 +14,10 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
+
+import com.gipflstuermer.gipfl.database.GipflContract;
+import com.gipflstuermer.gipfl.database.GipflDbHelper;
+
 import java.util.ArrayList;
 
 /**
@@ -30,6 +34,10 @@ public class TripListActivity extends AppCompatActivity implements AdapterView.O
     private static final String PREF_ONTRIP = "OnTrip";
 
     private final static String TRIP_KEY = "com.giflstuermer.gipfl.trip_key";
+
+    // Database
+    //GipflDbHelper mDbHelper = new GipflDbHelper(getApplicationContext());
+
     ListView mainListView;
     TripAdapter tripAdapter;
 
