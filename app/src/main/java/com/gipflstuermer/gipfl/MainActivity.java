@@ -22,6 +22,9 @@ public class MainActivity extends AppCompatActivity {
     private static final String PREFS = "prefs";
     private static final String PREF_USER =  "User"; // <-- The Logged in User as String
     private static final String PREF_ONTRIP = "OnTrip"; // <-- boolean, if the user is on trip
+
+    // TODO: Change sharedPref
+
     SharedPreferences sharedPreferences;
 
     @Override

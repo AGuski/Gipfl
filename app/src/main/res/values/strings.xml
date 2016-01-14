@@ -26,4 +26,9 @@
     <string name="name_activity_maps">Map</string>
     <string name="name_activity_trip">TripActivity</string>
     <string name="name_activity_poi">PoiActivity</string>
+
+    <!-- Strings related to Active Trip -->
+    <string name="curr_altitude">Current Altitude: %1$s</string>
+    <string name="curr_longitude">Current Longitude: %1$s</string>
+    <string name="curr_latitude">Current Latitude: %1$s</string>
 </resources>

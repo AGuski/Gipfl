@@ -11,12 +11,16 @@ import android.location.LocationManager;
 import android.os.Bundle;
 import android.util.Log;
 
+import com.gipflstuermer.gipfl.TripActivity;
+
 /**
  * Created by Ammon-Mino on 04.12.2015.
  */
 public class GPSSensor implements LocationListener {
 
-    String myLocation;
+    String mAltitude;
+    String mLongitude;
+    String mLatitude;
 
     public GPSSensor(){
 
@@ -24,15 +28,9 @@ public class GPSSensor implements LocationListener {
 
     @Override
     public void onLocationChanged(Location location) {
-        location.getLatitude();
-        location.getLongitude();
-        location.getAltitude();//mit offset kalibrieren
-
-        myLocation = "Latitude = " + location.getLatitude() + " Longitude = " + location.getLongitude();
-
-        //I make a log to see the results
-        Log.d("MY CURRENT LOCATION", myLocation);
-
+        mLatitude = ""+location.getLatitude();
+        mLongitude = ""+location.getLongitude();
+        mAltitude = ""+location.getAltitude();//mit offset kalibrieren;
 
     }
 
@@ -50,4 +48,6 @@ public class GPSSensor implements LocationListener {
     public void onProviderDisabled(String s) {
 
     }
+
+
 }

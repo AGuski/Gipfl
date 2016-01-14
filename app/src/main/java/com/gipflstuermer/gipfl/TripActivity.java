@@ -4,6 +4,7 @@ import android.Manifest;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.location.Location;
 import android.location.LocationManager;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
@@ -25,7 +26,9 @@ public class TripActivity extends AppCompatActivity {
 
     private final static String TRIP_KEY = "com.giflstuermer.gipfl.trip_key";
     Trip mTrip;
-    String myAltitude;
+    String currAltitude;
+    String currLongitude;
+    String currLatitude;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -50,8 +53,9 @@ public class TripActivity extends AppCompatActivity {
         TextView tripTitle = (TextView) findViewById(R.id.trip_title);
         tripTitle.setText(mTrip.getTitle());
 
-        TextView baro_text = (TextView) findViewById(R.id.baro_text);
-        baro_text.setText("Wurst");
+        final TextView currAltitudeText = (TextView) findViewById(R.id.curr_alti_text);
+        final TextView currLongitudeText = (TextView) findViewById(R.id.curr_longi_text);
+        final TextView currLatitudeText = (TextView) findViewById(R.id.curr_lati_text);
 
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
@@ -72,22 +76,30 @@ public class TripActivity extends AppCompatActivity {
 
         // Add Barometer
 
-
         if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION)
                 != PackageManager.PERMISSION_GRANTED) {
-            myAltitude = "no information";
+            currAltitudeText.setText(getString(R.string.curr_altitude, "no information"));
+            currLongitudeText.setText(getString(R.string.curr_longitude, "no information"));
+            currLatitudeText.setText(getString(R.string.curr_latitude, "no information"));
         } else {
             LocationManager locationManager = (LocationManager)getSystemService(Context.LOCATION_SERVICE);
-            GPSSensor gpsListener = new GPSSensor();
+            // Get GPS Sensor
+            GPSSensor gpsListener = new GPSSensor() {
+                @Override
+                public void onLocationChanged(Location location) {
+                    super.onLocationChanged(location);
+
+                    currAltitudeText.setText(getString(R.string.curr_altitude,""+location.getAltitude()));
+                    currLongitudeText.setText(getString(R.string.curr_longitude,""+location.getLongitude()));
+                    currLatitudeText.setText(getString(R.string.curr_latitude,""+location.getLatitude()));
+
+                }
+            };
             locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, gpsListener);
             locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 0, 0, gpsListener);
 
-            myAltitude = "altitude";
         }
 
-        //Barometer barometer = new Barometer();
-        //String pressure = Float.toString(barometer.getPressure());
-        baro_text.setText(myAltitude);
     }
 
     @Override
