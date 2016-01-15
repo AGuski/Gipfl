@@ -44,7 +44,6 @@ public class MyGipfl extends Application {
                 currentUser = u;
             }
         }
-        Log.d("curUserString:",currentUser.getName());
     }
 
     //DEV STUFF

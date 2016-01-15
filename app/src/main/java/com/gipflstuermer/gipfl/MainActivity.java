@@ -15,8 +15,6 @@ import android.view.MenuItem;
 
 import com.gipflstuermer.gipfl.database.GipflDbHelper;
 
-import java.util.ArrayList;
-
 public class MainActivity extends AppCompatActivity {
 
     // Shared Preferences:
@@ -31,8 +29,6 @@ public class MainActivity extends AppCompatActivity {
 
     // Database
     GipflDbHelper mDbHelper;
-
-    // TODO: Change sharedPref
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -60,20 +56,13 @@ public class MainActivity extends AppCompatActivity {
         SharedPreferences.Editor editor = sharedPreferences.edit();
         editor.putInt(PREF_USER, 1); // Logged in as Peter (user id 1).
 
-        //((MyGipfl) this.getApplication()).createContent(); //<-- Creating content in Dev.
-
-        // set Current User
-        //((MyGipfl) this.getApplication()).setCurrentUser(sharedPreferences.getString(PREF_USER, ""));
-        //((MyGipfl) this.getApplication()).setCurrentUser("Peter");
-
         editor.putBoolean(PREF_ONTRIP, false); // is on trip. Switch for Trip/TripList
         //editor.clear(); // <-- Clears the SharedPrefs - For Development!
         editor.commit();
 
-        //testContent(this);
+        //testContent(this); //<---- ZUM ERSTEN START NUTZEN - DANACH AUSKOMMENTIEREN!!
 
         Log.d("CurrUser", "ID: " + mDbHelper.getUser(1).getId() + " Name:" + mDbHelper.getUser(1).getName());
-
 
         // Check for Login Session
         if (sharedPreferences.getInt(PREF_USER, 0) == 0) {

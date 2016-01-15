@@ -219,17 +219,19 @@ public class GipflDbHelper extends SQLiteOpenHelper {
      *
      */
 
-    public List<Trip> getTripsOfUser(int UserId) {
+    public ArrayList<Trip> getTripsOfUser(int UserId) {
         SQLiteDatabase db = this.getReadableDatabase();
-        List<Trip> trips = new ArrayList<Trip>();
-        // <--- was nu? SQL --->
-        String selectQuery = "SELECT " + GipflContract.TripTable.TABLE_NAME + ".* FROM " +
-                            GipflContract.TripTable.TABLE_NAME + " RIGHT JOIN " +
-                            GipflContract.UserTripsTable.TABLE_NAME + " ON" + GipflContract.TripTable._ID +
-                            " = " + GipflContract.UserTripsTable.COLUMN_NAME_TRIP_ID + " LEFT JOIN " +
-                            GipflContract.UserTable.TABLE_NAME + " ON " + GipflContract.UserTable._ID +
-                            " = " + GipflContract.UserTripsTable.COLUMN_NAME_USER_ID + " WHERE " +
-                            GipflContract.UserTripsTable.COLUMN_NAME_USER_ID + " = " + UserId;
+        ArrayList<Trip> trips = new ArrayList<>();
+
+        String TripTableName = GipflContract.TripTable.TABLE_NAME;
+        String UserTripsTableName = GipflContract.UserTripsTable.TABLE_NAME;
+
+        String selectQuery = "SELECT " + TripTableName + ".*"
+                + " FROM " + UserTripsTableName
+                + " LEFT JOIN " + TripTableName
+                + " ON " + TripTableName + "." + GipflContract.TripTable._ID + " = "
+                + GipflContract.UserTripsTable.COLUMN_NAME_TRIP_ID
+                + " WHERE " + GipflContract.UserTripsTable.COLUMN_NAME_USER_ID + " = " + UserId;
 
         Log.d("Query", selectQuery);
 

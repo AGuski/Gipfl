@@ -72,7 +72,7 @@ public class TripListActivity extends AppCompatActivity implements AdapterView.O
         mainListView.setAdapter(tripAdapter);
 
         // 5. get Trip list from currentUser <-- at the moment: all trips;
-        tripList = mDbHelper.getAllTrips();
+        tripList = mDbHelper.getTripsOfUser(sharedPreferences.getInt(MainActivity.PREF_USER,0));
 
         // 6. Update the TripAdapter
         tripAdapter.updateData(tripList);
