@@ -82,7 +82,12 @@ public class TripStartActivity extends AppCompatActivity {
             Log.d("Trip", mTrip.getTitle());
 
             // set the current Item to the trip (WHY YOU NO WORK???!!!!)
-            //mViewPager.setCurrentItem(((MyGipfl) getApplication()).getCurrentUser().getTrips().indexOf(mTrip));
+            for (Trip trip : mTripList) {
+                if (trip.getId() == mTrip.getId()){
+                    mViewPager.setCurrentItem(mTripList.indexOf(trip));
+                }
+            }
+
         } else {
             // Code for new Trip Here
             Log.d("Trip", "Empty Trip");

@@ -16,6 +16,9 @@ import java.util.List;
 /**
  * Created by alex on 13.01.16.
  */
+
+// TODO: NOT CLOSED DATABASE / LOCK DATABASE BUG BEHEBEN.
+
 public class GipflDbHelper extends SQLiteOpenHelper {
 
     private static final String TEXT_TYPE = " TEXT";
