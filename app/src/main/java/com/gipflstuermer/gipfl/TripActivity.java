@@ -4,6 +4,7 @@ import android.Manifest;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.location.Location;
 import android.location.LocationManager;
@@ -21,6 +22,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 
+import com.gipflstuermer.gipfl.database.GipflDbHelper;
 import com.gipflstuermer.gipfl.tools.Barometer;
 import com.gipflstuermer.gipfl.tools.GPSSensor;
 import com.gipflstuermer.gipfl.tools.GPXRecorder;
@@ -39,9 +41,9 @@ import javax.xml.transform.TransformerException;
 
 public class TripActivity extends AppCompatActivity {
 
-    private final static String TRIP_KEY = "com.giflstuermer.gipfl.trip_key";
     Trip mTrip;
-
+    GipflDbHelper mDbHelper;
+    SharedPreferences sharedPreferences;
 
 
     @Override
@@ -51,17 +53,19 @@ public class TripActivity extends AppCompatActivity {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        // Check if started with an existing Trip, if not: ERROR!
-        if(getIntent().hasExtra(TRIP_KEY)){
-            mTrip = (Trip)getIntent().getSerializableExtra(TRIP_KEY);
-            Log.d("Trip", "Trip Deserialized!");
-            Log.d("Trip", mTrip.getTitle());
-        } else {
-            Log.d("Trip", "Empty Trip");
-        }
+        mDbHelper = new GipflDbHelper(getApplicationContext());
+        sharedPreferences = getApplicationContext().getSharedPreferences(MainActivity.PREFS, MODE_PRIVATE);
 
-        // get currentTrip from Global Variable
-        mTrip = ((MyGipfl) getApplication()).getCurrentUser().getActiveTrip();
+        // Get User & ActiveTrip
+        int userId = sharedPreferences.getInt(MainActivity.PREF_USER, 0);
+        // If there is no logged in User -> send to Login
+        if (userId < 1) {
+            Intent loginIntent = new Intent(this, LoginActivity.class);
+            startActivity(loginIntent);
+        }
+        User user = mDbHelper.getUser(userId);
+        mTrip = user.getActiveTrip();
+
 
         // Access Textviews from XML
         TextView tripTitle = (TextView) findViewById(R.id.trip_title);
@@ -81,13 +85,13 @@ public class TripActivity extends AppCompatActivity {
             }
         });
 
-        // If User is already logged in, greet him with Alert.
-        if (this.getIntent().hasExtra("User")) {
-            String name = (String) this.getIntent().getExtras().get("User");
-            AlertDialog.Builder alert = new AlertDialog.Builder(this);
-            alert.setMessage("Welcome back to your trip, " + name);
-            alert.show();
-        }
+//        // If User is already logged in, greet him with Alert.
+//        if (this.getIntent().hasExtra("User")) {
+//            String name = (String) this.getIntent().getExtras().get("User");
+//            AlertDialog.Builder alert = new AlertDialog.Builder(this);
+//            alert.setMessage("Welcome back to your trip, " + name);
+//            alert.show();
+//        }
 
         // Add Onscreen GPS
         if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION)
@@ -108,7 +112,7 @@ public class TripActivity extends AppCompatActivity {
                 }
             };
             gpsListener.getLocationManager().requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, gpsListener);
-            gpsListener.getLocationManager().requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 0, 0, gpsListener);
+            //gpsListener.getLocationManager().requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 0, 0, gpsListener);
         }
 
         // On Click Listeners

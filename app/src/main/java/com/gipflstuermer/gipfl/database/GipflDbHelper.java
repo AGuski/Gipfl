@@ -19,7 +19,7 @@ import java.util.List;
 public class GipflDbHelper extends SQLiteOpenHelper {
 
     private static final String TEXT_TYPE = " TEXT";
-    private static final String INT_TYPE = "INT";
+    private static final String INT_TYPE = " INT";
     private static final String COMMA_SEP = ",";
 
     /* Trips Table SQL */
@@ -44,6 +44,7 @@ public class GipflDbHelper extends SQLiteOpenHelper {
                     GipflContract.UserTable._ID + " INTEGER PRIMARY KEY," +
                     GipflContract.UserTable.COLUMN_NAME_NAME + TEXT_TYPE + COMMA_SEP +
                     GipflContract.UserTable.COLUMN_NAME_PASSWORD + TEXT_TYPE + COMMA_SEP +
+                    GipflContract.UserTable.COLUMN_NAME_ACTIVETRIP + INT_TYPE +
                     // Any other options for the CREATE command
                     " )";
 
@@ -54,10 +55,10 @@ public class GipflDbHelper extends SQLiteOpenHelper {
     /* UserTrips Table SQL */
 
     private static final String SQL_CREATE_USERTRIPS =
-            "CREATE TABLE " + GipflContract.UserTable.TABLE_NAME + " (" +
+            "CREATE TABLE " + GipflContract.UserTripsTable.TABLE_NAME + " (" +
                     GipflContract.UserTable._ID + " INTEGER PRIMARY KEY," +
                     GipflContract.UserTripsTable.COLUMN_NAME_USER_ID + INT_TYPE + COMMA_SEP +
-                    GipflContract.UserTripsTable.COLUMN_NAME_TRIP_ID + INT_TYPE + COMMA_SEP +
+                    GipflContract.UserTripsTable.COLUMN_NAME_TRIP_ID + INT_TYPE +
                     // Any other options for the CREATE command
                     " )";
 
@@ -80,24 +81,6 @@ public class GipflDbHelper extends SQLiteOpenHelper {
         db.execSQL(SQL_CREATE_USERTRIPS);
         Log.d("db: ", SQL_CREATE_USERTRIPS);
 
-
-        /*
-         * FILL DATABASE ONLY FOR DEVELOPMENT -> LATER TO BE REPLACED WITH ONLINE DB-CONNECTION
-         */
-
-        this.createUser(new User("Peter", "1234"));
-
-
-        this.createTrip(new Trip("Kaffee-Fahrt", "Peter"));
-        this.createTrip(new Trip("Balkan-Route","Angela"));
-        this.createTrip(new Trip("Wurst-Wanderung", "Peter"));
-        this.createTrip(new Trip("Walkabout", "Eso-Franz"));
-
-        for (Trip trip : this.getAllTrips()) {
-            Log.d("Title", trip.getTitle());
-            Log.d("Author", trip.getAuthor());
-
-        }
     }
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
         // This database is only a cache for online data, so its upgrade policy is
@@ -137,12 +120,39 @@ public class GipflDbHelper extends SQLiteOpenHelper {
         ContentValues values = new ContentValues();
         values.put(GipflContract.UserTable.COLUMN_NAME_NAME, user.getName());
         values.put(GipflContract.UserTable.COLUMN_NAME_PASSWORD, user.getPassword());
+        values.put(GipflContract.UserTable.COLUMN_NAME_ACTIVETRIP, 0);
 
         // insert row
-        long trip_id = db.insert(GipflContract.UserTable.TABLE_NAME, "null", values);
+        long user_id = db.insert(GipflContract.UserTable.TABLE_NAME, "null", values);
 
-        return trip_id;
+        return user_id;
     }
+
+    public long addTripToUser(Trip trip, User user){
+        SQLiteDatabase db = this.getWritableDatabase();
+        ContentValues values = new ContentValues();
+        values.put(GipflContract.UserTripsTable.COLUMN_NAME_TRIP_ID, trip.getId());
+        values.put(GipflContract.UserTripsTable.COLUMN_NAME_USER_ID, user.getId());
+
+        // insert row
+        long usertrip_id = db.insert(GipflContract.UserTripsTable.TABLE_NAME, "null", values);
+
+        return usertrip_id;
+
+    }
+
+    public long updateActiveTrip(int tripId, int userId){
+        SQLiteDatabase db = this.getWritableDatabase();
+        ContentValues values = new ContentValues();
+        values.put(GipflContract.UserTable.COLUMN_NAME_ACTIVETRIP, tripId);
+
+        // update row
+        long user_id = db.update(GipflContract.UserTable.TABLE_NAME, values, GipflContract.UserTable._ID + " = ?",
+                new String[]{String.valueOf(userId)});
+
+        return user_id;
+    }
+
 
     /**
      *
@@ -158,18 +168,24 @@ public class GipflDbHelper extends SQLiteOpenHelper {
         Log.d("Query", selectQuery);
 
         Cursor c = db.rawQuery(selectQuery, null);
-
         if (c != null)
             c.moveToFirst();
 
-        String title = c.getString(c.getColumnIndex(GipflContract.TripTable.COLUMN_NAME_TITLE));
-        String author = c.getString(c.getColumnIndex(GipflContract.TripTable.COLUMN_NAME_AUTHOR));
-        String description = c.getString(c.getColumnIndex(GipflContract.TripTable.COLUMN_NAME_DESCRIPTION));
+        return tripBuilder(c);
+    }
 
-        Trip trip = new Trip(title,author);
-        trip.setId(c.getInt(c.getColumnIndex(GipflContract.TripTable._ID)));
+    public User getUser(long user_id){
+        SQLiteDatabase db = this.getReadableDatabase();
+        String selectQuery = "SELECT  * FROM " + GipflContract.UserTable.TABLE_NAME + " WHERE "
+                + GipflContract.UserTable._ID + " = " + user_id;
 
-        return trip;
+        Log.d("Query", selectQuery);
+
+        Cursor c = db.rawQuery(selectQuery, null);
+        if (c != null)
+            c.moveToFirst();
+
+        return userBuilder(c);
     }
 
     /**
@@ -178,9 +194,9 @@ public class GipflDbHelper extends SQLiteOpenHelper {
      *
      */
 
-    public List<Trip> getAllTrips() {
+    public ArrayList<Trip> getAllTrips() {
         SQLiteDatabase db = this.getReadableDatabase();
-        List<Trip> trips = new ArrayList<Trip>();
+        ArrayList<Trip> trips = new ArrayList<>();
         String selectQuery = "SELECT  * FROM " +GipflContract.TripTable.TABLE_NAME;
 
         Log.d("Query", selectQuery);
@@ -190,13 +206,8 @@ public class GipflDbHelper extends SQLiteOpenHelper {
         // looping through all rows and adding to list
         if (c.moveToFirst()) {
             do {
-                String title = c.getString(c.getColumnIndex(GipflContract.TripTable.COLUMN_NAME_TITLE));
-                String author = c.getString(c.getColumnIndex(GipflContract.TripTable.COLUMN_NAME_AUTHOR));
-                String description = c.getString(c.getColumnIndex(GipflContract.TripTable.COLUMN_NAME_DESCRIPTION));
-                Trip t = new Trip(title, author);
 
-                // adding to trip list
-                trips.add(t);
+                trips.add(tripBuilder(c));
             } while (c.moveToNext());
         }
         return trips;
@@ -212,24 +223,58 @@ public class GipflDbHelper extends SQLiteOpenHelper {
         SQLiteDatabase db = this.getReadableDatabase();
         List<Trip> trips = new ArrayList<Trip>();
         // <--- was nu? SQL --->
-        String selectQuery = "SELECT  * FROM " +GipflContract.TripTable.TABLE_NAME;
+        String selectQuery = "SELECT " + GipflContract.TripTable.TABLE_NAME + ".* FROM " +
+                            GipflContract.TripTable.TABLE_NAME + " RIGHT JOIN " +
+                            GipflContract.UserTripsTable.TABLE_NAME + " ON" + GipflContract.TripTable._ID +
+                            " = " + GipflContract.UserTripsTable.COLUMN_NAME_TRIP_ID + " LEFT JOIN " +
+                            GipflContract.UserTable.TABLE_NAME + " ON " + GipflContract.UserTable._ID +
+                            " = " + GipflContract.UserTripsTable.COLUMN_NAME_USER_ID + " WHERE " +
+                            GipflContract.UserTripsTable.COLUMN_NAME_USER_ID + " = " + UserId;
 
         Log.d("Query", selectQuery);
 
         Cursor c = db.rawQuery(selectQuery, null);
-
         // looping through all rows and adding to list
         if (c.moveToFirst()) {
             do {
-                String title = c.getString(c.getColumnIndex(GipflContract.TripTable.COLUMN_NAME_TITLE));
-                String author = c.getString(c.getColumnIndex(GipflContract.TripTable.COLUMN_NAME_AUTHOR));
-                String description = c.getString(c.getColumnIndex(GipflContract.TripTable.COLUMN_NAME_DESCRIPTION));
-                Trip t = new Trip(title, author);
-
-                // adding to trip list
-                trips.add(t);
+                trips.add(tripBuilder(c));
             } while (c.moveToNext());
         }
         return trips;
     }
+
+    /**
+     *
+     * Builders to make Objects from cursor position in the database.
+     * Must be updated when Attributes change.
+     *
+     */
+
+    private Trip tripBuilder(Cursor c){
+        String title = c.getString(c.getColumnIndex(GipflContract.TripTable.COLUMN_NAME_TITLE));
+        String author = c.getString(c.getColumnIndex(GipflContract.TripTable.COLUMN_NAME_AUTHOR));
+        String description = c.getString(c.getColumnIndex(GipflContract.TripTable.COLUMN_NAME_DESCRIPTION));
+        Trip trip = new Trip(title, author);
+        trip.setId(c.getInt(c.getColumnIndex(GipflContract.TripTable._ID)));
+
+        return trip;
+    }
+
+    private User userBuilder(Cursor c){
+
+        String name = c.getString(c.getColumnIndex(GipflContract.UserTable.COLUMN_NAME_NAME));
+        String password = c.getString(c.getColumnIndex(GipflContract.UserTable.COLUMN_NAME_PASSWORD));
+
+        User user = new User(name,password);
+        user.setId(c.getInt(c.getColumnIndex(GipflContract.UserTable._ID)));
+        int activeTrip = c.getInt(c.getColumnIndex(GipflContract.UserTable.COLUMN_NAME_ACTIVETRIP));
+        // If user has an active trip, get trip from database and set it
+        if (activeTrip > 0) {
+            user.setActiveTrip(getTrip(c.getInt(c.getColumnIndex(GipflContract.UserTable.COLUMN_NAME_ACTIVETRIP))));
+        }
+
+        return user;
+
+    }
+
 }

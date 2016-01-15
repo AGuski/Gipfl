@@ -1,5 +1,6 @@
 package com.gipflstuermer.gipfl;
 
+import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
@@ -18,14 +19,20 @@ import java.util.ArrayList;
 
 public class MainActivity extends AppCompatActivity {
 
-    // Pesistent storage +-+
-    private static final String PREFS = "prefs";
-    private static final String PREF_USER =  "User"; // <-- The Logged in User as String
-    private static final String PREF_ONTRIP = "OnTrip"; // <-- boolean, if the user is on trip
+    // Shared Preferences:
+    SharedPreferences sharedPreferences;
+    public static final String PREFS = "prefs";
+    public static final String PREF_USER =  "UserId"; // <-- The Logged in User as String
+    public static final String PREF_ONTRIP = "OnTrip"; // <-- boolean, if the user is on trip
+
+    // Extra Keys used in the app
+    public static final String TRIP_KEY = "com.giflstuermer.gipfl.trip_key"; // <-- key for trip to put as extra.
+    public static final String TRIPLIST_KEY = "com.giflstuermer.gipfl.triplist_key";
+
+    // Database
+    GipflDbHelper mDbHelper;
 
     // TODO: Change sharedPref
-
-    SharedPreferences sharedPreferences;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -46,31 +53,36 @@ public class MainActivity extends AppCompatActivity {
         // Get Shared Prefs:
         sharedPreferences = getApplicationContext().getSharedPreferences(PREFS, MODE_PRIVATE);
 
+        // Get Database:
+        mDbHelper = new GipflDbHelper(getApplicationContext());
+
         // Set SharedPrefs for development!
         SharedPreferences.Editor editor = sharedPreferences.edit();
-        editor.putString(PREF_USER, "Peter"); // Logged in as Peter.
+        editor.putInt(PREF_USER, 1); // Logged in as Peter (user id 1).
 
-
-        ((MyGipfl) this.getApplication()).createContent(); //<-- Creating content in Dev.
+        //((MyGipfl) this.getApplication()).createContent(); //<-- Creating content in Dev.
 
         // set Current User
         //((MyGipfl) this.getApplication()).setCurrentUser(sharedPreferences.getString(PREF_USER, ""));
-        ((MyGipfl) this.getApplication()).setCurrentUser("Peter");
+        //((MyGipfl) this.getApplication()).setCurrentUser("Peter");
 
         editor.putBoolean(PREF_ONTRIP, false); // is on trip. Switch for Trip/TripList
         //editor.clear(); // <-- Clears the SharedPrefs - For Development!
         editor.commit();
 
+        //testContent(this);
+
+        Log.d("CurrUser", "ID: " + mDbHelper.getUser(1).getId() + " Name:" + mDbHelper.getUser(1).getName());
+
 
         // Check for Login Session
-        if(sharedPreferences.getString(PREF_USER, null) == null) {
+        if (sharedPreferences.getInt(PREF_USER, 0) == 0) {
             // Show Login Screen
             Intent loginIntent = new Intent(this, LoginActivity.class);
             startActivity(loginIntent);
         } else if(sharedPreferences.getBoolean(PREF_ONTRIP, false)){
             // If ONTRIP = true -> Show Trip Screen
             Intent tripIntent = new Intent(this, TripActivity.class);
-            tripIntent.putExtra("User",sharedPreferences.getString(PREF_USER, ""));
             startActivity(tripIntent);
         } else {
             // Show Trip List
@@ -107,6 +119,41 @@ public class MainActivity extends AppCompatActivity {
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    /* Test Content */
+
+    public static void testContent(Context context){
+        /*
+         * FILL DATABASE ONLY FOR DEVELOPMENT -> LATER TO BE REPLACED WITH ONLINE DB-CONNECTION
+         */
+
+        // TODO: Bessere Möglichkeit gleichzeitig Objekte und DB-Einträge zu verwalten.
+
+        GipflDbHelper mDbHelper = new GipflDbHelper(context);
+
+        mDbHelper.createUser(new User("Peter", "1234"));
+
+        mDbHelper.createTrip(new Trip("Kaffee-Fahrt", "Peter"));
+        mDbHelper.createTrip(new Trip("Balkan-Route", "Angela"));
+        mDbHelper.createTrip(new Trip("Wurst-Wanderung", "Peter"));
+        mDbHelper.createTrip(new Trip("Walkabout", "Eso-Franz"));
+        mDbHelper.createTrip(new Trip("Lustige Wanderung", "Vincent"));
+        mDbHelper.createTrip(new Trip("Pilgerfahrt", "Ibrahim"));
+
+        mDbHelper.addTripToUser(mDbHelper.getTrip(1), mDbHelper.getUser(1));
+        mDbHelper.addTripToUser(mDbHelper.getTrip(2), mDbHelper.getUser(1));
+        mDbHelper.addTripToUser(mDbHelper.getTrip(3), mDbHelper.getUser(1));
+        mDbHelper.addTripToUser(mDbHelper.getTrip(4), mDbHelper.getUser(1));
+
+        mDbHelper.updateActiveTrip(mDbHelper.getTrip(2).getId(),mDbHelper.getUser(1).getId());
+
+//        for (Trip trip : mDbHelper.getTripsOfUser(1)) {
+//            Log.d("Title", trip.getTitle());
+//            Log.d("Author", trip.getAuthor());
+//        }
+
+        Log.d("DEV","Content Created");
     }
 
 }

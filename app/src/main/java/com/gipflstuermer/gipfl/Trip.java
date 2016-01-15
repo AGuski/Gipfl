@@ -42,6 +42,10 @@ public class Trip implements Serializable {
         return this.author;
     }
 
+    public int getId(){
+        return this.id;
+    }
+
     // Should only be set by the Database!
     public void setId(int id){
         this.id = id;

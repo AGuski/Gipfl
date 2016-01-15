@@ -1,11 +1,17 @@
 package com.gipflstuermer.gipfl;
 
+import android.app.Application;
+
+import com.gipflstuermer.gipfl.database.GipflDbHelper;
+
 import java.util.ArrayList;
 
 /**
  * Created by alex on 04.12.15.
  */
 public class User {
+
+    GipflDbHelper mDbHelper;
 
     private int id;
     private String name;
@@ -15,6 +21,7 @@ public class User {
     // more to come...
 
     public User(String name, String password){
+
         this.name = name;
         this.password = password;
         this.trips = new ArrayList<>();
@@ -36,6 +43,10 @@ public class User {
         return this.password;
     }
 
+    public int getId(){
+        return this.id;
+    }
+
     // Should only be set by the Database!
     public void setId(int id){
         this.id = id;
@@ -46,6 +57,7 @@ public class User {
     }
 
     public void setActiveTrip(Trip trip){
+
         this.activeTrip = trip;
     }
 

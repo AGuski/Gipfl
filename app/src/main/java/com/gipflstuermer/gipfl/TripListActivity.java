@@ -1,5 +1,6 @@
 package com.gipflstuermer.gipfl;
 
+import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
@@ -9,6 +10,7 @@ import android.support.design.widget.Snackbar;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -29,17 +31,13 @@ import java.util.ArrayList;
 
 public class TripListActivity extends AppCompatActivity implements AdapterView.OnItemClickListener  {
 
+    GipflDbHelper mDbHelper;
     SharedPreferences sharedPreferences;
-    private static final String PREFS = "prefs";
-    private static final String PREF_ONTRIP = "OnTrip";
-
-    private final static String TRIP_KEY = "com.giflstuermer.gipfl.trip_key";
-
-    // Database
-    //GipflDbHelper mDbHelper = new GipflDbHelper(getApplicationContext());
 
     ListView mainListView;
     TripAdapter tripAdapter;
+
+    private ArrayList<Trip> tripList;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -47,8 +45,6 @@ public class TripListActivity extends AppCompatActivity implements AdapterView.O
         setContentView(R.layout.activity_trip_list);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-
-
 
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
@@ -60,7 +56,8 @@ public class TripListActivity extends AppCompatActivity implements AdapterView.O
         });
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
-        sharedPreferences = getApplicationContext().getSharedPreferences(PREFS, MODE_PRIVATE);
+        mDbHelper = new GipflDbHelper(getApplicationContext());
+        sharedPreferences = getApplicationContext().getSharedPreferences(MainActivity.PREFS, MODE_PRIVATE);
 
         // 1. Access the ListView
         mainListView = (ListView) findViewById(R.id.trip_listview);
@@ -74,8 +71,8 @@ public class TripListActivity extends AppCompatActivity implements AdapterView.O
         // 4. Set the ListView to use the ArrayAdapter
         mainListView.setAdapter(tripAdapter);
 
-        // 5. get Trip list from currentUser <-- must not be null!
-        ArrayList<Trip> tripList = ((MyGipfl) this.getApplication()).getCurrentUser().getTrips();
+        // 5. get Trip list from currentUser <-- at the moment: all trips;
+        tripList = mDbHelper.getAllTrips();
 
         // 6. Update the TripAdapter
         tripAdapter.updateData(tripList);
@@ -89,7 +86,8 @@ public class TripListActivity extends AppCompatActivity implements AdapterView.O
         Trip selectedTrip = (Trip) tripAdapter.getItem(position);
         // 2. Go to TripStart Screen
         Intent tripStartIntent = new Intent(this, TripStartActivity.class);
-        tripStartIntent.putExtra(TRIP_KEY,selectedTrip);
+        tripStartIntent.putExtra(MainActivity.TRIP_KEY,selectedTrip);
+        tripStartIntent.putExtra(MainActivity.TRIPLIST_KEY, tripList);
         startActivity(tripStartIntent);
     }
 
@@ -113,7 +111,7 @@ public class TripListActivity extends AppCompatActivity implements AdapterView.O
         }
 
         if (id == R.id.action_active_trip) {
-            if (sharedPreferences.getBoolean(PREF_ONTRIP, false)) {
+            if (sharedPreferences.getBoolean(MainActivity.PREF_ONTRIP, false)) {
                 Intent tripIntent = new Intent(this, TripActivity.class);
                 startActivity(tripIntent);
             } else {
@@ -130,4 +128,6 @@ public class TripListActivity extends AppCompatActivity implements AdapterView.O
 
         return super.onOptionsItemSelected(item);
     }
+
+
 }

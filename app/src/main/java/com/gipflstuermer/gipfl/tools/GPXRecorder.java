@@ -80,8 +80,7 @@ public class GPXRecorder {
                 != PackageManager.PERMISSION_GRANTED) {
 
             GPSSensor gpsListener = new GPSSensor(this.context);
-            gpsListener.getLocationManager().requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, gpsListener);
-            gpsListener.getLocationManager().requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 0, 0, gpsListener);
+
 
             trPoint.setElevation(gpsListener.getAltitude());
             trPoint.setLongitude(gpsListener.getLongitude());

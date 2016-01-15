@@ -22,6 +22,8 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
 
+import com.gipflstuermer.gipfl.database.GipflDbHelper;
+
 import java.util.ArrayList;
 
 public class TripStartActivity extends AppCompatActivity {
@@ -34,15 +36,15 @@ public class TripStartActivity extends AppCompatActivity {
      * may be best to switch to a
      * {@link android.support.v4.app.FragmentStatePagerAdapter}.
      */
-    private SectionsPagerAdapter mSectionsPagerAdapter;
+    private TripPagerAdapter mSectionsPagerAdapter;
 
     /**
      * The {@link ViewPager} that will host the section contents.
      */
     private ViewPager mViewPager;
 
-    private final static String TRIP_KEY = "com.giflstuermer.gipfl.trip_key";
     private Trip mTrip;
+    private ArrayList<Trip> mTripList;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -54,12 +56,14 @@ public class TripStartActivity extends AppCompatActivity {
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         // Create the adapter that will return a fragment for each of the three
         // primary sections of the activity.
-        mSectionsPagerAdapter = new SectionsPagerAdapter(getSupportFragmentManager());
+
+        // Get the TripList from before
+        mTripList = (ArrayList<Trip>)getIntent().getSerializableExtra(MainActivity.TRIPLIST_KEY);
+        mSectionsPagerAdapter = new TripPagerAdapter(getSupportFragmentManager(), mTripList);
 
         // Set up the ViewPager with the sections adapter.
         mViewPager = (ViewPager) findViewById(R.id.container);
         mViewPager.setAdapter(mSectionsPagerAdapter);
-
 
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
@@ -71,13 +75,14 @@ public class TripStartActivity extends AppCompatActivity {
         });
 
         // Check if started with an existing Trip, if not, create new Trip:
-        if(getIntent().hasExtra(TRIP_KEY)){
-            mTrip = (Trip)getIntent().getSerializableExtra(TRIP_KEY);
+        if(getIntent().hasExtra(MainActivity.TRIP_KEY)){
+            mTrip = (Trip)getIntent().getSerializableExtra(MainActivity.TRIP_KEY);
+
             Log.d("Trip", "Trip Deserialized!");
             Log.d("Trip", mTrip.getTitle());
 
             // set the current Item to the trip (WHY YOU NO WORK???!!!!)
-            mViewPager.setCurrentItem(((MyGipfl) getApplication()).getCurrentUser().getTrips().indexOf(mTrip));
+            //mViewPager.setCurrentItem(((MyGipfl) getApplication()).getCurrentUser().getTrips().indexOf(mTrip));
         } else {
             // Code for new Trip Here
             Log.d("Trip", "Empty Trip");
@@ -124,13 +129,13 @@ public class TripStartActivity extends AppCompatActivity {
      * A {@link FragmentPagerAdapter} that returns a fragment corresponding to
      * one of the sections/tabs/pages.
      */
-    public class SectionsPagerAdapter extends FragmentPagerAdapter {
+    public class TripPagerAdapter extends FragmentPagerAdapter {
 
         private ArrayList<Trip> tripList;
 
-        public SectionsPagerAdapter(FragmentManager fm) {
+        public TripPagerAdapter(FragmentManager fm, ArrayList<Trip> tripList) {
             super(fm);
-            tripList = ((MyGipfl) getApplication()).getCurrentUser().getTrips();
+            this.tripList = tripList;
         }
 
         @Override
@@ -138,12 +143,12 @@ public class TripStartActivity extends AppCompatActivity {
             // getItem is called to instantiate the fragment for the given page.
             // Return a PlaceholderFragment (defined as a static inner class below).
 
-            return TripStartFragment.newInstance(tripList.get(position));
+            return TripStartFragment.newInstance(this.tripList.get(position));
         }
 
         @Override
         public int getCount() {
-            return tripList.size();
+            return this.tripList.size();
         }
 
     }
@@ -154,11 +159,8 @@ public class TripStartActivity extends AppCompatActivity {
 
     public static class TripStartFragment extends Fragment {
 
-        private static final String PREFS = "prefs";
-        private static final String PREF_ONTRIP = "OnTrip"; // <-- boolean, if the user is on trip
+        GipflDbHelper mDbHelper;
         SharedPreferences sharedPreferences;
-
-        private final static String TRIP_KEY = "com.giflstuermer.gipfl.trip_key";
 
         private static final String ARG_TRIP = "trip_start_fragment";
         private Trip mTrip;
@@ -184,7 +186,8 @@ public class TripStartActivity extends AppCompatActivity {
                                  Bundle savedInstanceState) {
             View rootView = inflater.inflate(R.layout.fragment_trip_start, container, false);
 
-            sharedPreferences = getActivity().getApplicationContext().getSharedPreferences(PREFS, MODE_PRIVATE);
+            mDbHelper = new GipflDbHelper(getActivity().getApplicationContext());
+            sharedPreferences = getActivity().getApplicationContext().getSharedPreferences(MainActivity.PREFS, MODE_PRIVATE);
 
             // <----- VIEW CONTENT FOR START TRIP HERE ------>
 
@@ -206,15 +209,20 @@ public class TripStartActivity extends AppCompatActivity {
             startButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    ((MyGipfl) getActivity().getApplication()).getCurrentUser().setActiveTrip(mTrip);
+
+                    // setTrip as activeTrip for User
+                    int userId = sharedPreferences.getInt(MainActivity.PREF_USER,0);
+                    mDbHelper.updateActiveTrip(mTrip.getId(),userId);
+                    Log.d("Active",mDbHelper.getUser(userId).getActiveTrip().getId()+"");
+
                     Log.d("startTrip", mTrip.getTitle());
                     // Write in Shared Prefs that user is now on trip!
                     SharedPreferences.Editor editor = sharedPreferences.edit();
-                    editor.putBoolean(PREF_ONTRIP, true); // is on trip now.
+                    editor.putBoolean(MainActivity.PREF_ONTRIP, true); // is on trip now.
                     editor.commit();
 
                     Intent tripIntent = new Intent(getActivity(), TripActivity.class);
-                    tripIntent.putExtra(TRIP_KEY, mTrip);
+                    tripIntent.putExtra(MainActivity.TRIP_KEY, mTrip);
                     startActivity(tripIntent);
                 }
             });
