@@ -5,6 +5,7 @@
     <string name="action_active_trip">My Active Trip</string>
     <string name="action_all_pois">All Points of Interest</string>
     <string name="name_activity_login">Sign in</string>
+    <string name="not_available">Not available</string>
 
     <!-- Strings related to login -->
     <string name="prompt_user">Username</string>
@@ -31,4 +32,10 @@
     <string name="curr_altitude">Current Altitude: %1$s</string>
     <string name="curr_longitude">Current Longitude: %1$s</string>
     <string name="curr_latitude">Current Latitude: %1$s</string>
+    <string name="record_gpx">Record</string>
+    <string name="gpx_rec_message">GPS is now recording to GPX.</string>
+    <string name="gpx_rec_title">GPX Recording</string>
+    <string name="ok">OK</string>
+    <string name="cancel">Cancel</string>
+    <string name="stop_rec">Stop recording</string>
 </resources>

@@ -13,13 +13,14 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textAppearance="?android:attr/textAppearanceLarge"
-        android:text="Trip Title here"
+        android:text="Trip Title"
         android:id="@+id/trip_title"
         android:layout_alignParentTop="true"
         android:layout_centerHorizontal="true" />
 
     <TextView
         android:id="@+id/curr_alti_text"
+        android:text="@string/not_available"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
 
@@ -30,6 +31,7 @@
 
     <TextView
         android:id="@+id/curr_longi_text"
+        android:text="@string/not_available"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
 
@@ -39,11 +41,21 @@
 
     <TextView
         android:id="@+id/curr_lati_text"
+        android:text="@string/not_available"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
 
         android:layout_above="@id/curr_longi_text"/>
 
+    <Button
+        style="?android:attr/buttonStyleSmall"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/record_gpx"
+        android:id="@+id/gpx_rec_button"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true"
+        android:layout_above="@+id/curr_longi_text" />
 
 
 </RelativeLayout>

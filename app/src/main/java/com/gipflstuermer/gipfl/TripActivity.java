@@ -2,6 +2,7 @@ package com.gipflstuermer.gipfl;
 
 import android.Manifest;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.location.Location;
@@ -17,18 +18,31 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.Button;
 import android.widget.TextView;
 
 import com.gipflstuermer.gipfl.tools.Barometer;
 import com.gipflstuermer.gipfl.tools.GPSSensor;
+import com.gipflstuermer.gipfl.tools.GPXRecorder;
+
+import org.alternativevision.gpx.GPXParser;
+import org.alternativevision.gpx.beans.GPX;
+import org.alternativevision.gpx.beans.Track;
+import org.alternativevision.gpx.beans.TrackPoint;
+
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+
+import javax.xml.parsers.ParserConfigurationException;
+import javax.xml.transform.TransformerException;
 
 public class TripActivity extends AppCompatActivity {
 
     private final static String TRIP_KEY = "com.giflstuermer.gipfl.trip_key";
     Trip mTrip;
-    String currAltitude;
-    String currLongitude;
-    String currLatitude;
+
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -56,6 +70,7 @@ public class TripActivity extends AppCompatActivity {
         final TextView currAltitudeText = (TextView) findViewById(R.id.curr_alti_text);
         final TextView currLongitudeText = (TextView) findViewById(R.id.curr_longi_text);
         final TextView currLatitudeText = (TextView) findViewById(R.id.curr_lati_text);
+        final Button GPXrecButton = (Button) findViewById(R.id.gpx_rec_button);
 
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
@@ -74,17 +89,15 @@ public class TripActivity extends AppCompatActivity {
             alert.show();
         }
 
-        // Add Barometer
-
+        // Add Onscreen GPS
         if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION)
                 != PackageManager.PERMISSION_GRANTED) {
             currAltitudeText.setText(getString(R.string.curr_altitude, "no information"));
             currLongitudeText.setText(getString(R.string.curr_longitude, "no information"));
             currLatitudeText.setText(getString(R.string.curr_latitude, "no information"));
         } else {
-            LocationManager locationManager = (LocationManager)getSystemService(Context.LOCATION_SERVICE);
             // Get GPS Sensor
-            GPSSensor gpsListener = new GPSSensor() {
+            GPSSensor gpsListener = new GPSSensor(this) {
                 @Override
                 public void onLocationChanged(Location location) {
                     super.onLocationChanged(location);
@@ -92,13 +105,52 @@ public class TripActivity extends AppCompatActivity {
                     currAltitudeText.setText(getString(R.string.curr_altitude,""+location.getAltitude()));
                     currLongitudeText.setText(getString(R.string.curr_longitude,""+location.getLongitude()));
                     currLatitudeText.setText(getString(R.string.curr_latitude,""+location.getLatitude()));
-
                 }
             };
-            locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, gpsListener);
-            locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 0, 0, gpsListener);
-
+            gpsListener.getLocationManager().requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, gpsListener);
+            gpsListener.getLocationManager().requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 0, 0, gpsListener);
         }
+
+        // On Click Listeners
+
+        GPXrecButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                //1. Create new Recorder
+                final GPXRecorder mGPXRecorder = new GPXRecorder(v.getContext(), 3000);
+
+                //2. start recording
+                mGPXRecorder.startRec();
+
+                //3. Show dialog to stop recording
+                AlertDialog.Builder builder = new AlertDialog.Builder(v.getContext());
+                builder.setMessage(R.string.gpx_rec_message)
+                        .setTitle(R.string.gpx_rec_title);
+
+                // Stop Recording Button
+                builder.setNeutralButton(R.string.stop_rec, new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+                        //1. Stop Recording
+                        mGPXRecorder.stopRec();
+                        GPX mGpx = mGPXRecorder.getGpx();
+
+                        //2. Write GPX to GPX-File
+//                        GPXParser gpxParser = new GPXParser();
+//                        try {
+//                            FileOutputStream out = openFileOutput("thisTrip.gpx", Context.MODE_PRIVATE);
+//                            gpxParser.writeGPX(mGpx, out);
+//                            out.close();
+//                        } catch (IOException | ParserConfigurationException | TransformerException e) {
+//                            e.printStackTrace();
+//                        }
+                    }
+                });
+
+                AlertDialog GPXdialog = builder.create();
+                GPXdialog.show();
+            }
+        });
+
 
     }
 
