@@ -62,19 +62,20 @@ public class MainActivity extends AppCompatActivity {
 
         //testContent(this); //<---- ZUM ERSTEN START NUTZEN - DANACH AUSKOMMENTIEREN!!
 
+        // DEBUG LOG
         Log.d("CurrUser", "ID: " + mDbHelper.getUser(1).getId() + " Name:" + mDbHelper.getUser(1).getName());
 
-        // Check for Login Session
+        // Check if a User is logged in, if not UserID = 0
         if (sharedPreferences.getInt(PREF_USER, 0) == 0) {
-            // Show Login Screen
+            // If not Logged in.
             Intent loginIntent = new Intent(this, LoginActivity.class);
             startActivity(loginIntent);
         } else if(sharedPreferences.getBoolean(PREF_ONTRIP, false)){
-            // If ONTRIP = true -> Show Trip Screen
+            // If logged in & on trip -> TripActivity
             Intent tripIntent = new Intent(this, TripActivity.class);
             startActivity(tripIntent);
         } else {
-            // Show Trip List
+            // If logged in & not on trip -> TripListActivity
             Intent tripListIntent = new Intent(this, TripListActivity.class);
             startActivity(tripListIntent);
         }
@@ -129,6 +130,14 @@ public class MainActivity extends AppCompatActivity {
         mDbHelper.createTrip(new Trip("Walkabout", "Eso-Franz"));
         mDbHelper.createTrip(new Trip("Lustige Wanderung", "Vincent"));
         mDbHelper.createTrip(new Trip("Pilgerfahrt", "Ibrahim"));
+
+        mDbHelper.createPoi(new PointOfInterest("Alter Hut", 10.00, 20.00, 30.00));
+        mDbHelper.createPoi(new PointOfInterest("Wurstfabrik", 13.00,23.00,33.00));
+        mDbHelper.createPoi(new PointOfInterest("Alte Burg", 12.00, 21.00, 31.00));
+
+        for (PointOfInterest poi : mDbHelper.getAllPois()) {
+            Log.d("PoiName", poi.getName());
+        }
 
         mDbHelper.addTripToUser(mDbHelper.getTrip(1), mDbHelper.getUser(1));
         mDbHelper.addTripToUser(mDbHelper.getTrip(2), mDbHelper.getUser(1));

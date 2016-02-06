@@ -22,9 +22,14 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
 
+import com.gipflstuermer.gipfl.database.GipflDbHelper;
+
 import java.util.ArrayList;
 
 public class PoiActivity extends AppCompatActivity {
+
+    GipflDbHelper mDbHelper;
+    SharedPreferences sharedPreferences;
 
     /**
      * The {@link android.support.v4.view.PagerAdapter} that will provide
@@ -34,12 +39,15 @@ public class PoiActivity extends AppCompatActivity {
      * may be best to switch to a
      * {@link android.support.v4.app.FragmentStatePagerAdapter}.
      */
-    private SectionsPagerAdapter mSectionsPagerAdapter;
+    private PoiPagerAdapter mSectionsPagerAdapter;
 
     /**
      * The {@link ViewPager} that will host the section contents.
      */
     private ViewPager mViewPager;
+
+    private PointOfInterest mPoi;
+    private ArrayList<PointOfInterest> mPoiList;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -48,9 +56,14 @@ public class PoiActivity extends AppCompatActivity {
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+
+        mDbHelper = new GipflDbHelper(getApplicationContext());
+
         // Create the adapter that will return a fragment for each of the three
         // primary sections of the activity.
-        mSectionsPagerAdapter = new SectionsPagerAdapter(getSupportFragmentManager());
+
+        mPoiList = mDbHelper.getAllPois();
+        mSectionsPagerAdapter = new PoiPagerAdapter(getSupportFragmentManager(), mPoiList);
 
         // Set up the ViewPager with the sections adapter.
         mViewPager = (ViewPager) findViewById(R.id.container);
@@ -96,13 +109,13 @@ public class PoiActivity extends AppCompatActivity {
      * A {@link FragmentPagerAdapter} that returns a fragment corresponding to
      * one of the sections/tabs/pages.
      */
-    public class SectionsPagerAdapter extends FragmentPagerAdapter {
+    public class PoiPagerAdapter extends FragmentPagerAdapter {
 
         private ArrayList<PointOfInterest> poiList;
 
-        public SectionsPagerAdapter(FragmentManager fm) {
+        public PoiPagerAdapter(FragmentManager fm, ArrayList<PointOfInterest> poiList) {
             super(fm);
-            poiList = ((MyGipfl) getApplication()).getAllPointsOfInterest();
+            this.poiList = poiList;
         }
 
         @Override

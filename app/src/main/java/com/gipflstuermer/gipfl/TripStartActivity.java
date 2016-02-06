@@ -81,7 +81,7 @@ public class TripStartActivity extends AppCompatActivity {
             Log.d("Trip", "Trip Deserialized!");
             Log.d("Trip", mTrip.getTitle());
 
-            // set the current Item to the trip (WHY YOU NO WORK???!!!!)
+            // set the current Item to the trip
             for (Trip trip : mTripList) {
                 if (trip.getId() == mTrip.getId()){
                     mViewPager.setCurrentItem(mTripList.indexOf(trip));

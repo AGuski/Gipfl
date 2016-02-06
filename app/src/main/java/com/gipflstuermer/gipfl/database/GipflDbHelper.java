@@ -5,8 +5,10 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
+import android.graphics.Point;
 import android.util.Log;
 
+import com.gipflstuermer.gipfl.PointOfInterest;
 import com.gipflstuermer.gipfl.Trip;
 import com.gipflstuermer.gipfl.User;
 
@@ -22,7 +24,8 @@ import java.util.List;
 public class GipflDbHelper extends SQLiteOpenHelper {
 
     private static final String TEXT_TYPE = " TEXT";
-    private static final String INT_TYPE = " INT";
+    private static final String INT_TYPE = " INTEGER";
+    private static final String LONG_TYPE = " REAL";
     private static final String COMMA_SEP = ",";
 
     /* Trips Table SQL */
@@ -54,6 +57,23 @@ public class GipflDbHelper extends SQLiteOpenHelper {
     private static final String SQL_DELETE_USERS =
             "DROP TABLE IF EXISTS " + GipflContract.UserTable.TABLE_NAME;
 
+    /* Pois Table SQL */
+
+    private static final String SQL_CREATE_POIS =
+            "CREATE TABLE " + GipflContract.PoiTable.TABLE_NAME + " (" +
+                    GipflContract.PoiTable._ID + " INTEGER PRIMARY KEY," +
+                    GipflContract.PoiTable.COLUMN_NAME_NAME + TEXT_TYPE + COMMA_SEP +
+                    GipflContract.PoiTable.COLUMN_NAME_DESCRIPTION + TEXT_TYPE + COMMA_SEP +
+                    GipflContract.PoiTable.COLUMN_NAME_ALTITUDE + LONG_TYPE + COMMA_SEP +
+                    GipflContract.PoiTable.COLUMN_NAME_LATITUDE + LONG_TYPE + COMMA_SEP +
+                    GipflContract.PoiTable.COLUMN_NAME_LONGITUDE + LONG_TYPE + COMMA_SEP +
+                    GipflContract.PoiTable.COLUMN_NAME_IMAGE_URL + TEXT_TYPE +
+                    // Any other options for the CREATE command
+                    " )";
+
+    private static final String SQL_DELETE_POIS =
+            "DROP TABLE IF EXISTS " + GipflContract.PoiTable.TABLE_NAME;
+
 
     /* UserTrips Table SQL */
 
@@ -81,6 +101,8 @@ public class GipflDbHelper extends SQLiteOpenHelper {
         Log.d("db: ", SQL_CREATE_TRIPS);
         db.execSQL(SQL_CREATE_USERS);
         Log.d("db: ", SQL_CREATE_USERS);
+        db.execSQL(SQL_CREATE_POIS);
+        Log.d("db: ", SQL_CREATE_POIS);
         db.execSQL(SQL_CREATE_USERTRIPS);
         Log.d("db: ", SQL_CREATE_USERTRIPS);
 
@@ -90,6 +112,7 @@ public class GipflDbHelper extends SQLiteOpenHelper {
         // to simply to discard the data and start over
         db.execSQL(SQL_DELETE_TRIPS);
         db.execSQL(SQL_DELETE_USERS);
+        db.execSQL(SQL_DELETE_POIS);
         db.execSQL(SQL_DELETE_USERTRIPS);
         onCreate(db);
     }
@@ -131,6 +154,21 @@ public class GipflDbHelper extends SQLiteOpenHelper {
         return user_id;
     }
 
+    public long createPoi(PointOfInterest poi){
+        SQLiteDatabase db = this.getWritableDatabase();
+        ContentValues values = new ContentValues();
+        values.put(GipflContract.PoiTable.COLUMN_NAME_NAME, poi.getName());
+        values.put(GipflContract.PoiTable.COLUMN_NAME_DESCRIPTION, poi.getDescription());
+        values.put(GipflContract.PoiTable.COLUMN_NAME_ALTITUDE, 0);
+        values.put(GipflContract.PoiTable.COLUMN_NAME_LATITUDE, 0);
+        values.put(GipflContract.PoiTable.COLUMN_NAME_LONGITUDE, 0);
+
+        // insert row
+        long poi_id = db.insert(GipflContract.PoiTable.TABLE_NAME, "null", values);
+
+        return poi_id;
+    }
+
     public long addTripToUser(Trip trip, User user){
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues values = new ContentValues();
@@ -141,8 +179,8 @@ public class GipflDbHelper extends SQLiteOpenHelper {
         long usertrip_id = db.insert(GipflContract.UserTripsTable.TABLE_NAME, "null", values);
 
         return usertrip_id;
-
     }
+
 
     public long updateActiveTrip(int tripId, int userId){
         SQLiteDatabase db = this.getWritableDatabase();
@@ -155,7 +193,6 @@ public class GipflDbHelper extends SQLiteOpenHelper {
 
         return user_id;
     }
-
 
     /**
      *
@@ -191,6 +228,20 @@ public class GipflDbHelper extends SQLiteOpenHelper {
         return userBuilder(c);
     }
 
+    public PointOfInterest getPoi(long poi_id){
+        SQLiteDatabase db = this.getReadableDatabase();
+        String selectQuery = "SELECT  * FROM " + GipflContract.PoiTable.TABLE_NAME + " WHERE "
+                + GipflContract.PoiTable._ID + " = " + poi_id;
+
+        Log.d("Query", selectQuery);
+
+        Cursor c = db.rawQuery(selectQuery, null);
+        if (c != null)
+            c.moveToFirst();
+
+        return poiBuilder(c);
+    }
+
     /**
      *
      * Getting all Table Entries from a Table.
@@ -214,6 +265,25 @@ public class GipflDbHelper extends SQLiteOpenHelper {
             } while (c.moveToNext());
         }
         return trips;
+    }
+
+    public ArrayList<PointOfInterest> getAllPois() {
+        SQLiteDatabase db = this.getReadableDatabase();
+        ArrayList<PointOfInterest> pois = new ArrayList<>();
+        String selectQuery = "SELECT  * FROM " +GipflContract.PoiTable.TABLE_NAME;
+
+        Log.d("Query", selectQuery);
+
+        Cursor c = db.rawQuery(selectQuery, null);
+
+        // looping through all rows and adding to list
+        if (c.moveToFirst()) {
+            do {
+
+                pois.add(poiBuilder(c));
+            } while (c.moveToNext());
+        }
+        return pois;
     }
 
     /**
@@ -263,6 +333,21 @@ public class GipflDbHelper extends SQLiteOpenHelper {
         trip.setId(c.getInt(c.getColumnIndex(GipflContract.TripTable._ID)));
 
         return trip;
+    }
+
+    private PointOfInterest poiBuilder(Cursor c){
+        String name = c.getString(c.getColumnIndex(GipflContract.PoiTable.COLUMN_NAME_NAME));
+        String description = c.getString(c.getColumnIndex(GipflContract.PoiTable.COLUMN_NAME_DESCRIPTION));
+        double altitude = c.getDouble(c.getColumnIndex(GipflContract.PoiTable.COLUMN_NAME_ALTITUDE));
+        double latitude = c.getDouble(c.getColumnIndex(GipflContract.PoiTable.COLUMN_NAME_LATITUDE));
+        double longitude = c.getDouble(c.getColumnIndex(GipflContract.PoiTable.COLUMN_NAME_LONGITUDE));
+        String imageUrl = c.getString(c.getColumnIndex(GipflContract.PoiTable.COLUMN_NAME_IMAGE_URL));
+        PointOfInterest poi = new PointOfInterest(name, altitude, latitude, longitude);
+        if ( !description.equals("") ) poi.setDescription(description);
+        poi.setImageURL(imageUrl);
+        poi.setId(c.getInt(c.getColumnIndex(GipflContract.PoiTable._ID)));
+
+        return poi;
     }
 
     private User userBuilder(Cursor c){

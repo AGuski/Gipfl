@@ -48,23 +48,23 @@ public class MyGipfl extends Application {
 
     //DEV STUFF
 
-    public void createContent(){
-        // Creating User and Trips for Development
-        User peter = new User("Peter","1234");
-        peter.addTrip(new Trip("Kaffee-Fahrt","Peter"));
-        peter.addTrip(new Trip("Balkan-Route","Angela"));
-        peter.addTrip(new Trip("Wurst-Wanderung","Peter"));
-        peter.addTrip(new Trip("Walkabout", "Eso-Franz"));
-        users.add(peter);
-
-        //Points of Interest zum Testen
-        poiList.add(new PointOfInterest("Altes Schloss"));
-        poiList.add(new PointOfInterest("Wursthaus"));
-        poiList.add(new PointOfInterest("Erdloch"));
-
-        Log.d("DevContent: ",peter.getName());
-
-
-    }
+//    public void createContent(){
+//        // Creating User and Trips for Development
+//        User peter = new User("Peter","1234");
+//        peter.addTrip(new Trip("Kaffee-Fahrt","Peter"));
+//        peter.addTrip(new Trip("Balkan-Route","Angela"));
+//        peter.addTrip(new Trip("Wurst-Wanderung","Peter"));
+//        peter.addTrip(new Trip("Walkabout", "Eso-Franz"));
+//        users.add(peter);
+//
+//        //Points of Interest zum Testen
+//        poiList.add(new PointOfInterest("Altes Schloss"));
+//        poiList.add(new PointOfInterest("Wursthaus"));
+//        poiList.add(new PointOfInterest("Erdloch"));
+//
+//        Log.d("DevContent: ",peter.getName());
+//
+//
+//    }
 
 }
