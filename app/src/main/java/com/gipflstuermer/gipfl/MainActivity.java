@@ -109,6 +109,19 @@ public class MainActivity extends AppCompatActivity {
             Intent tripIntent = new Intent(this, TripActivity.class);
             startActivity(tripIntent);
         }
+        if (id == R.id.action_log_out) {
+            SharedPreferences.Editor editor = sharedPreferences.edit();
+            editor.putInt(PREF_USER, 0); // User Id 0 = logged Out.
+
+            editor.putBoolean(PREF_ONTRIP, false); // is on trip. Switch for Trip/TripList
+            //editor.clear(); // <-- Clears the SharedPrefs - For Development!
+            editor.commit();
+
+            Intent loginIntent = new Intent(this, LoginActivity.class);
+            startActivity(loginIntent);
+
+
+        }
 
         return super.onOptionsItemSelected(item);
     }
@@ -133,13 +146,9 @@ public class MainActivity extends AppCompatActivity {
         mDbHelper.createTrip(new Trip("Lustige Wanderung", "Vincent"));
         mDbHelper.createTrip(new Trip("Pilgerfahrt", "Ibrahim"));
 
-        mDbHelper.createPoi(new PointOfInterest("Alter Hut", 10.00, 20.00, 30.00));
+        mDbHelper.createPoi(new PointOfInterest("Alter Baum", 10.00, 20.00, 30.00));
         mDbHelper.createPoi(new PointOfInterest("Wurstfabrik", 13.00,23.00,33.00));
         mDbHelper.createPoi(new PointOfInterest("Alte Burg", 12.00, 21.00, 31.00));
-
-        for (PointOfInterest poi : mDbHelper.getAllPois()) {
-            Log.d("PoiName", poi.getName());
-        }
 
         mDbHelper.addTripToUser(mDbHelper.getTrip(1), mDbHelper.getUser(1));
         mDbHelper.addTripToUser(mDbHelper.getTrip(2), mDbHelper.getUser(1));
