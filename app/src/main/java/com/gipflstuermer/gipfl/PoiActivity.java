@@ -28,9 +28,6 @@ import java.util.ArrayList;
 
 public class PoiActivity extends AppCompatActivity {
 
-    GipflDbHelper mDbHelper;
-    SharedPreferences sharedPreferences;
-
     /**
      * The {@link android.support.v4.view.PagerAdapter} that will provide
      * fragments for each of the sections. We use a
@@ -57,12 +54,19 @@ public class PoiActivity extends AppCompatActivity {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        mDbHelper = new GipflDbHelper(getApplicationContext());
-
         // Create the adapter that will return a fragment for each of the three
         // primary sections of the activity.
 
-        mPoiList = mDbHelper.getAllPois();
+        mPoiList = (ArrayList<PointOfInterest>)getIntent().getSerializableExtra(MainActivity.POILIST_KEY);
+        mPoi = (PointOfInterest)getIntent().getSerializableExtra(MainActivity.POI_KEY);
+
+        // TODO: THIS
+        // set the current Item to the Poi
+//        for (PointOfInterest poi : mPoiList) {
+//            if (poi.getId() == mPoi.getId()){
+//                mViewPager.setCurrentItem(mPoiList.indexOf(poi));
+//            }
+//        }
         mSectionsPagerAdapter = new PoiPagerAdapter(getSupportFragmentManager(), mPoiList);
 
         // Set up the ViewPager with the sections adapter.

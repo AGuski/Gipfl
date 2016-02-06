@@ -26,6 +26,8 @@ public class MainActivity extends AppCompatActivity {
     // Extra Keys used in the app
     public static final String TRIP_KEY = "com.giflstuermer.gipfl.trip_key"; // <-- key for trip to put as extra.
     public static final String TRIPLIST_KEY = "com.giflstuermer.gipfl.triplist_key";
+    public static final String POI_KEY = "com.giflstuermer.gipfl.poi_key"; // <-- key for trip to put as extra.
+    public static final String POILIST_KEY = "com.giflstuermer.gipfl.poilist_key";
 
     // Database
     GipflDbHelper mDbHelper;
@@ -151,7 +153,7 @@ public class MainActivity extends AppCompatActivity {
 //            Log.d("Author", trip.getAuthor());
 //        }
 
-        Log.d("DEV","Content Created");
+        Log.d("DEV", "Content Created");
     }
 
 }
