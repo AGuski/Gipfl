@@ -1,5 +1,6 @@
 package com.gipflstuermer.gipfl;
 
+import android.app.DialogFragment;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
@@ -15,6 +16,7 @@ import android.widget.AdapterView;
 import android.widget.ListView;
 
 import com.gipflstuermer.gipfl.database.GipflDbHelper;
+import com.gipflstuermer.gipfl.dialogs.AddPoiDialogFragment;
 
 import java.util.ArrayList;
 
@@ -46,8 +48,8 @@ public class PoiListActivity extends AppCompatActivity implements AdapterView.On
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
+                AddPoiDialogFragment newPoi = new AddPoiDialogFragment();
+                newPoi.show(getSupportFragmentManager(),"newPoi");
             }
         });
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);

@@ -146,9 +146,27 @@ public class MainActivity extends AppCompatActivity {
         mDbHelper.createTrip(new Trip("Lustige Wanderung", "Vincent"));
         mDbHelper.createTrip(new Trip("Pilgerfahrt", "Ibrahim"));
 
-        mDbHelper.createPoi(new PointOfInterest("Alter Baum", 10.00, 20.00, 30.00));
-        mDbHelper.createPoi(new PointOfInterest("Wurstfabrik", 13.00,23.00,33.00));
-        mDbHelper.createPoi(new PointOfInterest("Alte Burg", 12.00, 21.00, 31.00));
+        PointOfInterest poi1 = new PointOfInterest("Fernsehturm", 13.00, 52.520815, 13.409430);
+        poi1.setImageURL("android.resource://com.gipflstuermer.gipfl/drawable/poi_ft_img");
+        poi1.setDescription("Ein sehr, sehr pitoresker Turm im Stile der 60er Jahre gehalten.");
+
+        PointOfInterest poi2 = new PointOfInterest("Brandenburger Tor", 12.00, 52.516389, 13.377778);
+        poi2.setImageURL("android.resource://com.gipflstuermer.gipfl/drawable/poi_bt_img");
+        poi2.setDescription("Ein schönes Tor, nur führt es leider gar nicht nach Brandenburg. Das ist sehr schade.");
+
+        PointOfInterest poi3 = new PointOfInterest("Beuth Hochschule für Technik", 16.00, 52.545336, 13.351633);
+        poi3.setImageURL("android.resource://com.gipflstuermer.gipfl/drawable/poi_beuth_img");
+        poi3.setDescription("Hier kann man so richtig schön Medieninformatik studieren.");
+
+        mDbHelper.createPoi(poi1);
+        mDbHelper.createPoi(poi2);
+        mDbHelper.createPoi(poi3);
+        mDbHelper.createPoi(new PointOfInterest("Wurstfabrik", 13.00,51.520815,14.409430));
+        mDbHelper.createPoi(new PointOfInterest("Alte Burg", 12.00, 51.516389, 14.377778));
+
+//        for (PointOfInterest poi : mDbHelper.getAllPois()) {
+//            Log.d("Lati",""+poi.getLatitude());
+//        }
 
         mDbHelper.addTripToUser(mDbHelper.getTrip(1), mDbHelper.getUser(1));
         mDbHelper.addTripToUser(mDbHelper.getTrip(2), mDbHelper.getUser(1));

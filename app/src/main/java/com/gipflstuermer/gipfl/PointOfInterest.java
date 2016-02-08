@@ -35,6 +35,22 @@ public class PointOfInterest implements Serializable {
         return description;
     }
 
+    public double getAltitude() {
+        return this.altitude;
+    }
+
+    public double getLatitude() {
+        return this.latitude;
+    }
+
+    public double getLongitude() {
+        return this.longitude;
+    }
+
+    public String getImageURL() {
+        return imageURL;
+    }
+
     // Should only be set by Database!!
     public void setId(int id) {
         this.id = id;

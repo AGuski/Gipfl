@@ -159,9 +159,10 @@ public class GipflDbHelper extends SQLiteOpenHelper {
         ContentValues values = new ContentValues();
         values.put(GipflContract.PoiTable.COLUMN_NAME_NAME, poi.getName());
         values.put(GipflContract.PoiTable.COLUMN_NAME_DESCRIPTION, poi.getDescription());
-        values.put(GipflContract.PoiTable.COLUMN_NAME_ALTITUDE, 0);
-        values.put(GipflContract.PoiTable.COLUMN_NAME_LATITUDE, 0);
-        values.put(GipflContract.PoiTable.COLUMN_NAME_LONGITUDE, 0);
+        values.put(GipflContract.PoiTable.COLUMN_NAME_ALTITUDE, poi.getAltitude());
+        values.put(GipflContract.PoiTable.COLUMN_NAME_LATITUDE, poi.getLatitude());
+        values.put(GipflContract.PoiTable.COLUMN_NAME_LONGITUDE, poi.getLongitude());
+        values.put(GipflContract.PoiTable.COLUMN_NAME_IMAGE_URL,poi.getImageURL());
 
         // insert row
         long poi_id = db.insert(GipflContract.PoiTable.TABLE_NAME, "null", values);

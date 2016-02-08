@@ -44,5 +44,7 @@
     <string name="ok">OK</string>
     <string name="cancel">Cancel</string>
     <string name="stop_rec">Stop recording</string>
+    <string name="add_photo_button">Add Photo</string>
+    <string name="add_poi_no_name_message">The Point of Interest must have a Name</string>
 
 </resources>

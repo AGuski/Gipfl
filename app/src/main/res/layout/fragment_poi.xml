@@ -6,9 +6,58 @@
     android:paddingBottom="@dimen/activity_vertical_margin"
     tools:context="com.gipflstuermer.gipfl.PoiActivity$PlaceholderFragment">
 
+    <ImageView
+        android:id="@+id/poi_image"
+        android:layout_width="match_parent"
+        android:layout_height="150dp"
+        android:src="@drawable/poi_default_img"
+        android:scaleType="centerCrop"
+        />
+
     <TextView android:id="@+id/poi_name" android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textSize="32dp"
+        android:layout_below="@id/poi_image"
         />
+
+    <TextView
+        android:id="@+id/poi_description"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="16dp"
+        android:layout_below="@id/poi_name"
+        />
+
+    <TextView
+        android:id="@+id/curr_alti_text"
+        android:text="@string/not_available"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+
+        android:layout_marginBottom="108dp"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true" />
+
+    <TextView
+        android:id="@+id/curr_longi_text"
+        android:text="@string/not_available"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+
+        android:layout_above="@id/curr_alti_text"
+
+        />
+
+    <TextView
+        android:id="@+id/curr_lati_text"
+        android:text="@string/not_available"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+
+        android:layout_above="@id/curr_longi_text"/>
+
+
+
 
 </RelativeLayout>

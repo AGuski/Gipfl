@@ -2,6 +2,7 @@ package com.gipflstuermer.gipfl;
 
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.net.Uri;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
@@ -20,6 +21,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.gipflstuermer.gipfl.database.GipflDbHelper;
@@ -176,12 +178,33 @@ public class PoiActivity extends AppCompatActivity {
             // <----- VIEW CONTENT FOR POINTS OF INTEREST HERE ------>
 
             TextView poiName = (TextView) rootView.findViewById(R.id.poi_name);
+            TextView poiDesc = (TextView) rootView.findViewById(R.id.poi_description);
+            TextView poiAltitude = (TextView) rootView.findViewById(R.id.curr_alti_text);
+            TextView poiLatitude = (TextView) rootView.findViewById(R.id.curr_lati_text);
+            TextView poiLongitude = (TextView) rootView.findViewById(R.id.curr_longi_text);
+            ImageView poiImage = (ImageView) rootView.findViewById(R.id.poi_image);
+
 
             // Get The poi as object
             mPoi = (PointOfInterest) getArguments().getSerializable(ARG_POI);
 
             // Set the Textfields
             poiName.setText(mPoi.getName());
+            poiDesc.setText(mPoi.getDescription());
+            poiAltitude.setText("Altitude: "+mPoi.getAltitude());
+            poiLatitude.setText("Latitude: "+mPoi.getLatitude());
+            poiLongitude.setText("Longitude: "+mPoi.getLongitude());
+
+            // Set the Image
+            // Internal Images:
+            // "android.resource://com.gipflstuermer.gipfl/drawable/poi_ft_img"
+
+            try {
+                Uri imagePath = Uri.parse(mPoi.getImageURL());
+                poiImage.setImageURI(imagePath);
+            } catch ( NullPointerException e) {
+                poiImage.setImageResource(R.drawable.poi_default_img);
+            }
 
             // <------ VIEW CONTENT END ------>
 

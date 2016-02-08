@@ -1,10 +1,12 @@
 package com.gipflstuermer.gipfl;
 
 import android.content.Context;
+import android.net.Uri;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import java.util.ArrayList;
@@ -54,7 +56,7 @@ public class PoiAdapter extends BaseAdapter{
 
             // create a new "Holder" with subviews
             holder = new ViewHolder();
-            //holder.poiImageView = (ImageView) convertView.findViewById(R.id.img_thumbnail);
+            holder.poiImageView = (ImageView) convertView.findViewById(R.id.img_thumbnail);
             holder.nameTextView = (TextView) convertView.findViewById(R.id.text_name);
             //holder.authorTextView = (TextView) convertView.findViewById(R.id.text_author);
 
@@ -72,7 +74,14 @@ public class PoiAdapter extends BaseAdapter{
 
         // get the infos & send these Strings to the TextViews for display
         holder.nameTextView.setText(poi.getName());
-        //holder.authorTextView.setText(poi.getAuthor());
+
+        try {
+            Uri imagePath = Uri.parse(poi.getImageURL());
+            holder.poiImageView.setImageURI(imagePath);
+        } catch ( NullPointerException e) {
+            holder.poiImageView.setImageResource(R.drawable.poi_default_img);
+        }
+
         // If there is an image add that too.
 
         return convertView;
@@ -89,6 +98,6 @@ public class PoiAdapter extends BaseAdapter{
     private static class ViewHolder {
         //public ImageView poiImageView;
         public TextView nameTextView;
-        //public TextView authorTextView;
+        public ImageView poiImageView;
     }
 }
