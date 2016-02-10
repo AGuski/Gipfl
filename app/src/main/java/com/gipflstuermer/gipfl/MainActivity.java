@@ -140,7 +140,7 @@ public class MainActivity extends AppCompatActivity {
         mDbHelper.createUser(new User("Peter", "1234"));
 
         mDbHelper.createTrip(new Trip("Kaffee-Fahrt", "Peter"));
-        mDbHelper.createTrip(new Trip("Balkan-Route", "Angela"));
+        mDbHelper.createTrip(new Trip("Berlin Tour", "Angela"));
         mDbHelper.createTrip(new Trip("Wurst-Wanderung", "Peter"));
         mDbHelper.createTrip(new Trip("Walkabout", "Eso-Franz"));
         mDbHelper.createTrip(new Trip("Lustige Wanderung", "Vincent"));
@@ -158,11 +158,23 @@ public class MainActivity extends AppCompatActivity {
         poi3.setImageURL("android.resource://com.gipflstuermer.gipfl/drawable/poi_beuth_img");
         poi3.setDescription("Hier kann man so richtig schön Medieninformatik studieren.");
 
+        PointOfInterest poi4 = new PointOfInterest("Siegessäule", 10.00, 52.514688, 13.350104);
+        poi4.setImageURL("android.resource://com.gipflstuermer.gipfl/drawable/poi_ss_img");
+        poi4.setDescription("Die Siegessäule auf dem Großen Stern inmitten des Großen Tiergartens in Berlin " +
+                "wurde von 1864 bis 1873 als Nationaldenkmal der Einigungskriege nach einem Entwurf " +
+                "von Heinrich Strack erbaut.");
+
+        PointOfInterest poi5 = new PointOfInterest("Beuth Hochschule für Technik", 19.00, 52.543449, 13.359516);
+        poi5.setImageURL("android.resource://com.gipflstuermer.gipfl/drawable/poi_eb_img");
+        poi5.setDescription("Im Februar gibt es hier Rauchbier. Das ist alles, was man wissen muss.");
+
         mDbHelper.createPoi(poi1);
         mDbHelper.createPoi(poi2);
         mDbHelper.createPoi(poi3);
-        mDbHelper.createPoi(new PointOfInterest("Wurstfabrik", 13.00,51.520815,14.409430));
-        mDbHelper.createPoi(new PointOfInterest("Alte Burg", 12.00, 51.516389, 14.377778));
+        mDbHelper.createPoi(poi4);
+        mDbHelper.createPoi(poi5);
+
+
 
 //        for (PointOfInterest poi : mDbHelper.getAllPois()) {
 //            Log.d("Lati",""+poi.getLatitude());

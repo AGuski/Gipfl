@@ -27,7 +27,8 @@
         android:layout_height="wrap_content"
         android:id="@+id/poi_name_editText"
         android:layout_gravity="center_horizontal"
-        android:layout_marginBottom="25dp" />
+        android:layout_marginBottom="25dp"
+        android:inputType="text" />
 
     <TextView
         android:layout_width="wrap_content"
@@ -41,13 +42,31 @@
         android:layout_height="wrap_content"
         android:id="@+id/poi_description_editText"
         android:layout_marginBottom="25dp"
-        android:lines="3" />
+        android:lines="3"
+        android:inputType="textMultiLine"
+        android:hint="Describe the Point of Interest" />
 
-    <Button
-        android:layout_width="wrap_content"
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="@string/add_photo_button"
-        android:id="@+id/add_photo_button" />
+        android:layout_gravity="center_horizontal">
+
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/add_photo_button"
+            android:id="@+id/add_photo_button" />
+
+        <ImageView
+            android:layout_width="100dp"
+            android:layout_height="50dp"
+            android:id="@+id/add_poi_imageView"
+            android:src="#93adb0"
+            android:layout_marginLeft="25dp"
+            android:scaleType="centerCrop"/>
+
+    </LinearLayout>
 
     <TableLayout
         android:layout_width="wrap_content"

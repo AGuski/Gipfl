@@ -9,23 +9,32 @@
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
     tools:showIn="@layout/activity_trip" tools:context="com.gipflstuermer.gipfl.TripActivity">
 
+    <ImageView
+        android:layout_width="match_parent"
+        android:layout_height="150dp"
+        android:id="@+id/trip_map_image"
+        android:layout_centerInParent="true"
+        android:layout_alignParentTop="true"
+        android:scaleType="centerCrop"
+        android:src="@drawable/maps_mock_img" />
+
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textAppearance="?android:attr/textAppearanceLarge"
         android:text="Trip Title"
         android:id="@+id/trip_title"
-        android:layout_alignParentTop="true"
-        android:layout_centerHorizontal="true" />
+        android:layout_below="@id/trip_map_image"
+        android:layout_alignParentLeft="true" />
 
     <TextView
+        android:layout_marginTop="100dp"
         android:id="@+id/curr_alti_text"
         android:text="@string/not_available"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_below="@id/trip_title"
 
-        android:layout_marginBottom="108dp"
-        android:layout_alignParentBottom="true"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true" />
 
@@ -35,7 +44,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
 
-        android:layout_above="@id/curr_alti_text"
+        android:layout_below="@id/curr_alti_text"
 
         />
 
@@ -44,18 +53,18 @@
         android:text="@string/not_available"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-
-        android:layout_above="@id/curr_longi_text"/>
+        android:layout_below="@id/curr_longi_text"/>
 
     <Button
         style="?android:attr/buttonStyleSmall"
+        android:layout_marginTop="15dp"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/record_gpx"
         android:id="@+id/gpx_rec_button"
-        android:layout_alignParentRight="true"
-        android:layout_alignParentEnd="true"
-        android:layout_above="@+id/curr_longi_text" />
+        android:layout_below="@+id/curr_lati_text" />
+
+
 
 
 </RelativeLayout>
